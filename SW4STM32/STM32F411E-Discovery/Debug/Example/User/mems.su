@@ -1,0 +1,2 @@
+mems.c:53:6:ACCELERO_MEMS_Test	24	static
+mems.c:137:6:GYRO_MEMS_Test	32	static
