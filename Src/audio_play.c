@@ -191,7 +191,7 @@ void BSP_AUDIO_OUT_TransferComplete_CallBack()
     CurrentPos += DMA_MAX(AudioTotalSize);
   }
   
-  /* Audio sample saved during record */
+  /* Audio sample saved during record */  // commment this to not repeat play record
   if((AudioTest == 1) && (replay == 1))
   {
     /* Replay from the beginning */

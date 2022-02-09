@@ -3,7 +3,7 @@
 <title>Static Call Graph - [STM32F411E-Discovery\STM32F411E-Discovery.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image STM32F411E-Discovery\STM32F411E-Discovery.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Wed Feb 09 16:30:10 2022
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Wed Feb 09 17:31:32 2022
 <BR><P>
 <H3>Maximum Stack Usage =        208 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -589,7 +589,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AudioRecord_Test
 </UL>
 
-<P><STRONG><a name="[99]"></a>BSP_AUDIO_OUT_TransferComplete_CallBack</STRONG> (Thumb, 158 bytes, Stack size 24 bytes, audio_play.o(i.BSP_AUDIO_OUT_TransferComplete_CallBack))
+<P><STRONG><a name="[99]"></a>BSP_AUDIO_OUT_TransferComplete_CallBack</STRONG> (Thumb, 128 bytes, Stack size 24 bytes, audio_play.o(i.BSP_AUDIO_OUT_TransferComplete_CallBack))
 <BR><BR>[Stack]<UL><LI>Max Depth = 92<LI>Call Chain = BSP_AUDIO_OUT_TransferComplete_CallBack &rArr; BSP_AUDIO_OUT_Play &rArr; HAL_I2S_Transmit_DMA &rArr; HAL_DMA_Start_IT &rArr; DMA_SetConfig
 </UL>
 <BR>[Calls]<UL><LI><a href="#[93]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_AUDIO_OUT_ChangeBuffer
