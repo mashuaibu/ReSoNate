@@ -1,0 +1,9 @@
+*.bak
+*.uvguix.*
+build/
+DebugConfig/
+stm32/dl/
+libstm32f4.a
+*.o
+stm32/*.bin
+stm32/*.elf
