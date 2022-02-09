@@ -3,7 +3,7 @@
 <title>Static Call Graph - [STM32F411E-Discovery\STM32F411E-Discovery.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image STM32F411E-Discovery\STM32F411E-Discovery.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Wed Feb 09 15:10:29 2022
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Wed Feb 09 16:30:10 2022
 <BR><P>
 <H3>Maximum Stack Usage =        208 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -469,18 +469,18 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[79]"></a>BSP_AUDIO_IN_Init</STRONG> (Thumb, 58 bytes, Stack size 16 bytes, stm32f411e_discovery_audio.o(i.BSP_AUDIO_IN_Init))
-<BR><BR>[Stack]<UL><LI>Max Depth = 104<LI>Call Chain = BSP_AUDIO_IN_Init &rArr; BSP_AUDIO_IN_MspInit &rArr; HAL_GPIO_Init
+<BR><BR>[Stack]<UL><LI>Max Depth = 104<LI>Call Chain = BSP_AUDIO_IN_Init &rArr; PDMDecoder_Init &rArr; PDM_Filter_setConfig &rArr; __hardfp_powf
 </UL>
-<BR>[Calls]<UL><LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_AUDIO_IN_MspInit
+<BR>[Calls]<UL><LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PDMDecoder_Init
+<LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2S2_Init
+<LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_AUDIO_IN_MspInit
 <LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_AUDIO_IN_ClockConfig
 <LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_I2S_GetState
-<LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PDMDecoder_Init
-<LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2S2_Init
 </UL>
 <BR>[Called By]<UL><LI><a href="#[0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AudioRecord_Test
 </UL>
 
-<P><STRONG><a name="[8a]"></a>BSP_AUDIO_IN_MspInit</STRONG> (Thumb, 212 bytes, Stack size 48 bytes, stm32f411e_discovery_audio.o(i.BSP_AUDIO_IN_MspInit))
+<P><STRONG><a name="[8a]"></a>BSP_AUDIO_IN_MspInit</STRONG> (Thumb, 214 bytes, Stack size 48 bytes, stm32f411e_discovery_audio.o(i.BSP_AUDIO_IN_MspInit))
 <BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = BSP_AUDIO_IN_MspInit &rArr; HAL_GPIO_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_NVIC_SetPriority
@@ -550,10 +550,10 @@ Global Symbols
 <P><STRONG><a name="[7f]"></a>BSP_AUDIO_OUT_Init</STRONG> (Thumb, 94 bytes, Stack size 24 bytes, stm32f411e_discovery_audio.o(i.BSP_AUDIO_OUT_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 112<LI>Call Chain = BSP_AUDIO_OUT_Init &rArr; BSP_AUDIO_OUT_MspInit &rArr; HAL_GPIO_Init
 </UL>
-<BR>[Calls]<UL><LI><a href="#[97]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_AUDIO_OUT_MspInit
+<BR>[Calls]<UL><LI><a href="#[98]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2S3_Init
+<LI><a href="#[97]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_AUDIO_OUT_MspInit
 <LI><a href="#[95]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_AUDIO_OUT_ClockConfig
 <LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_I2S_GetState
-<LI><a href="#[98]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2S3_Init
 </UL>
 <BR>[Called By]<UL><LI><a href="#[0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AudioRecord_Test
 </UL>
@@ -743,9 +743,9 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GetTick
 </UL>
-<BR>[Called By]<UL><LI><a href="#[81]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_AUDIO_OUT_Stop
+<BR>[Called By]<UL><LI><a href="#[70]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AUDIO_IO_Init
+<LI><a href="#[81]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_AUDIO_OUT_Stop
 <LI><a href="#[dc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Toggle_Leds
-<LI><a href="#[70]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AUDIO_IO_Init
 </UL>
 
 <P><STRONG><a name="[aa]"></a>HAL_GPIO_EXTI_Callback</STRONG> (Thumb, 48 bytes, Stack size 16 bytes, main.o(i.HAL_GPIO_EXTI_Callback))
@@ -768,12 +768,12 @@ Global Symbols
 <P><STRONG><a name="[71]"></a>HAL_GPIO_Init</STRONG> (Thumb, 446 bytes, Stack size 40 bytes, stm32f4xx_hal_gpio.o(i.HAL_GPIO_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = HAL_GPIO_Init
 </UL>
-<BR>[Called By]<UL><LI><a href="#[9f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_PB_Init
+<BR>[Called By]<UL><LI><a href="#[70]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AUDIO_IO_Init
+<LI><a href="#[9f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_PB_Init
 <LI><a href="#[9a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LED_Init
 <LI><a href="#[d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2Cx_MspInit
 <LI><a href="#[97]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_AUDIO_OUT_MspInit
 <LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_AUDIO_IN_MspInit
-<LI><a href="#[70]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AUDIO_IO_Init
 </UL>
 
 <P><STRONG><a name="[9e]"></a>HAL_GPIO_ReadPin</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, stm32f4xx_hal_gpio.o(i.HAL_GPIO_ReadPin))
@@ -785,20 +785,17 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[73]"></a>HAL_GPIO_WritePin</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, stm32f4xx_hal_gpio.o(i.HAL_GPIO_WritePin))
-<BR><BR>[Called By]<UL><LI><a href="#[81]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_AUDIO_OUT_Stop
+<BR><BR>[Called By]<UL><LI><a href="#[70]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AUDIO_IO_Init
+<LI><a href="#[81]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_AUDIO_OUT_Stop
 <LI><a href="#[7b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LED_On
 <LI><a href="#[7e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LED_Off
 <LI><a href="#[9a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LED_Init
-<LI><a href="#[70]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AUDIO_IO_Init
 </UL>
 
 <P><STRONG><a name="[a5]"></a>HAL_GetTick</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, stm32f4xx_hal.o(i.HAL_GetTick))
 <BR><BR>[Called By]<UL><LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_OscConfig
 <LI><a href="#[cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_ClockConfig
 <LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_Delay
-<LI><a href="#[86]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCCEx_PeriphCLKConfig
-<LI><a href="#[92]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_I2S_DMAStop
-<LI><a href="#[8d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_DMA_Init
 <LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_WaitOnTXEFlagUntilTimeout
 <LI><a href="#[b3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_WaitOnRXNEFlagUntilTimeout
 <LI><a href="#[d0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2C_WaitOnMasterAddressFlagUntilTimeout
@@ -808,6 +805,9 @@ Global Symbols
 <LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2S_WaitFlagStateUntilTimeout
 <LI><a href="#[b4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_I2C_Mem_Write
 <LI><a href="#[b0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_I2C_Mem_Read
+<LI><a href="#[86]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCCEx_PeriphCLKConfig
+<LI><a href="#[92]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_I2S_DMAStop
+<LI><a href="#[8d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_DMA_Init
 </UL>
 
 <P><STRONG><a name="[ab]"></a>HAL_I2C_DeInit</STRONG> (Thumb, 50 bytes, Stack size 8 bytes, stm32f4xx_hal_i2c.o(i.HAL_I2C_DeInit))
@@ -1152,14 +1152,14 @@ Global Symbols
 <P><STRONG><a name="[d8]"></a>__hardfp_powf</STRONG> (Thumb, 1606 bytes, Stack size 32 bytes, powf.o(i.__hardfp_powf))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = __hardfp_powf
 </UL>
-<BR>[Calls]<UL><LI><a href="#[de]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__set_errno
+<BR>[Calls]<UL><LI><a href="#[dd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__ieee_status
+<LI><a href="#[de]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__set_errno
 <LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__mathlib_flt_underflow
 <LI><a href="#[df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__mathlib_flt_overflow
 <LI><a href="#[e2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__mathlib_flt_invalid
 <LI><a href="#[e3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__mathlib_flt_infnan2
 <LI><a href="#[e4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__mathlib_flt_divzero
 <LI><a href="#[e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__ARM_fpclassifyf
-<LI><a href="#[dd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__ieee_status
 </UL>
 <BR>[Called By]<UL><LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PDM_Filter_setConfig
 </UL>
@@ -1360,8 +1360,8 @@ Local Symbols
 <P><STRONG><a name="[d2]"></a>I2Cx_Error</STRONG> (Thumb, 16 bytes, Stack size 8 bytes, stm32f411e_discovery.o(i.I2Cx_Error))
 <BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = I2Cx_Error &rArr; I2Cx_Init &rArr; I2Cx_MspInit &rArr; HAL_GPIO_Init
 </UL>
-<BR>[Calls]<UL><LI><a href="#[72]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2Cx_Init
-<LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_I2C_DeInit
+<BR>[Calls]<UL><LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_I2C_DeInit
+<LI><a href="#[72]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2Cx_Init
 </UL>
 <BR>[Called By]<UL><LI><a href="#[78]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2Cx_WriteData
 <LI><a href="#[76]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2Cx_ReadData
@@ -1370,12 +1370,12 @@ Local Symbols
 <P><STRONG><a name="[72]"></a>I2Cx_Init</STRONG> (Thumb, 60 bytes, Stack size 8 bytes, stm32f411e_discovery.o(i.I2Cx_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = I2Cx_Init &rArr; I2Cx_MspInit &rArr; HAL_GPIO_Init
 </UL>
-<BR>[Calls]<UL><LI><a href="#[d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2Cx_MspInit
-<LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_I2C_Init
+<BR>[Calls]<UL><LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_I2C_Init
 <LI><a href="#[d3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_I2C_GetState
+<LI><a href="#[d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2Cx_MspInit
 </UL>
-<BR>[Called By]<UL><LI><a href="#[d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2Cx_Error
-<LI><a href="#[70]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AUDIO_IO_Init
+<BR>[Called By]<UL><LI><a href="#[70]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AUDIO_IO_Init
+<LI><a href="#[d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2Cx_Error
 </UL>
 
 <P><STRONG><a name="[d4]"></a>I2Cx_MspInit</STRONG> (Thumb, 128 bytes, Stack size 32 bytes, stm32f411e_discovery.o(i.I2Cx_MspInit))
@@ -1391,8 +1391,8 @@ Local Symbols
 <P><STRONG><a name="[76]"></a>I2Cx_ReadData</STRONG> (Thumb, 44 bytes, Stack size 24 bytes, stm32f411e_discovery.o(i.I2Cx_ReadData))
 <BR><BR>[Stack]<UL><LI>Max Depth = 160<LI>Call Chain = I2Cx_ReadData &rArr; HAL_I2C_Mem_Read &rArr; I2C_RequestMemoryRead &rArr; I2C_WaitOnMasterAddressFlagUntilTimeout
 </UL>
-<BR>[Calls]<UL><LI><a href="#[d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2Cx_Error
-<LI><a href="#[b0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_I2C_Mem_Read
+<BR>[Calls]<UL><LI><a href="#[b0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_I2C_Mem_Read
+<LI><a href="#[d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2Cx_Error
 </UL>
 <BR>[Called By]<UL><LI><a href="#[75]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AUDIO_IO_Read
 </UL>
@@ -1400,8 +1400,8 @@ Local Symbols
 <P><STRONG><a name="[78]"></a>I2Cx_WriteData</STRONG> (Thumb, 38 bytes, Stack size 32 bytes, stm32f411e_discovery.o(i.I2Cx_WriteData))
 <BR><BR>[Stack]<UL><LI>Max Depth = 160<LI>Call Chain = I2Cx_WriteData &rArr; HAL_I2C_Mem_Write &rArr; I2C_RequestMemoryWrite &rArr; I2C_WaitOnMasterAddressFlagUntilTimeout
 </UL>
-<BR>[Calls]<UL><LI><a href="#[d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2Cx_Error
-<LI><a href="#[b4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_I2C_Mem_Write
+<BR>[Calls]<UL><LI><a href="#[b4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_I2C_Mem_Write
+<LI><a href="#[d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;I2Cx_Error
 </UL>
 <BR>[Called By]<UL><LI><a href="#[77]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AUDIO_IO_Write
 </UL>

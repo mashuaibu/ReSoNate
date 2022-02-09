@@ -409,11 +409,6 @@
               <FilePath>../Src/audio_play.c</FilePath>
             </File>
             <File>
-              <FileName>mems.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Src/mems.c</FilePath>
-            </File>
-            <File>
               <FileName>stm32f4xx_it.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Src/stm32f4xx_it.c</FilePath>
@@ -444,26 +439,6 @@
           <GroupName>Drivers/BSP/Components</GroupName>
           <Files>
             <File>
-              <FileName>l3gd20.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Drivers/BSP/Components/l3gd20/l3gd20.c</FilePath>
-            </File>
-            <File>
-              <FileName>i3g4250d.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Drivers/BSP/Components/i3g4250d/i3g4250d.c</FilePath>
-            </File>
-            <File>
-              <FileName>lsm303dlhc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Drivers/BSP/Components/lsm303dlhc/lsm303dlhc.c</FilePath>
-            </File>
-            <File>
-              <FileName>lsm303agr.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Drivers/BSP/Components/lsm303agr/lsm303agr.c</FilePath>
-            </File>
-            <File>
               <FileName>cs43l22.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Drivers/BSP/Components/cs43l22/cs43l22.c</FilePath>
@@ -487,16 +462,6 @@
               <FileName>stm32f411e_discovery_audio.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Drivers/BSP/STM32F411E-Discovery/stm32f411e_discovery_audio.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f411e_discovery_accelerometer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Drivers/BSP/STM32F411E-Discovery/stm32f411e_discovery_accelerometer.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f411e_discovery_gyroscope.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Drivers/BSP/STM32F411E-Discovery/stm32f411e_discovery_gyroscope.c</FilePath>
             </File>
             <File>
               <FileName>stm32f411e_discovery.c</FileName>

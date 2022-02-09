@@ -86,16 +86,6 @@ void AudioPlay_Test(void)
 {  
   /* Initial volume level (from 0 (Mute) to 100 (Max)) */
   __IO uint8_t volume = 70;
-
-  /* Initialize MEMS Accelerometer mounted on STM32F4-Discovery board */
-  if(BSP_ACCELERO_Init() != ACCELERO_OK)
-  {
-    /* Initialization Error */
-    Error_Handler();
-  }
-  
-  /* MEMS Accelerometer configure to manage PAUSE, RESUME operations */
-  BSP_ACCELERO_Click_ITConfig();
   
   /* Turn ON LED6: start of Audio file play */
   BSP_LED_On(LED6);

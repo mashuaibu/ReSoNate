@@ -23,8 +23,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f411e_discovery.h"
-#include "stm32f411e_discovery_gyroscope.h"
-#include "stm32f411e_discovery_accelerometer.h"
 #include "stm32f411e_discovery_audio.h"
 #include "mems.h"
 #include "audio_play.h"
