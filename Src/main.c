@@ -50,7 +50,7 @@ __IO uint32_t PressCount = 0;
 
 /* Private function prototypes -----------------------------------------------*/
 static void SystemClock_Config(void);
-
+static void myDelay(int delay);
 /* Private functions ---------------------------------------------------------*/
 
 /**
@@ -207,13 +207,17 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 void Toggle_Leds(void)
 {
   BSP_LED_Toggle(LED3);
-  HAL_Delay(100);
+  myDelay(100);
+//  HAL_Delay(100);
   BSP_LED_Toggle(LED4);
-  HAL_Delay(100);
+  myDelay(100);
+//  HAL_Delay(100);
   BSP_LED_Toggle(LED5);
-  HAL_Delay(100);
+  myDelay(100);
+//  HAL_Delay(100);
   BSP_LED_Toggle(LED6);
-  HAL_Delay(100);
+  myDelay(100);
+//  HAL_Delay(100);
 }
 
 /**
@@ -250,6 +254,16 @@ void assert_failed(uint8_t* file, uint32_t line)
   }
 }
 #endif
+
+static void myDelay(int delay)
+{
+  int i = 0;
+  while(i < delay*20000)
+  {
+    i++;
+  }
+  
+}
 
 /**
   * @}

@@ -20,6 +20,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "audio_record.h"
 #include "string.h"
+#include "codec2.h"
 
 /** @addtogroup STM32F4xx_HAL_Examples
   * @{
@@ -69,6 +70,9 @@ extern __IO uint8_t UserPressButton;
 extern uint32_t AudioTotalSize; /* This variable holds the total size of the audio file */
 extern uint32_t AudioRemSize;   /* This variable holds the remaining data in audio file */
 extern uint16_t *CurrentPos;   /* This variable holds the current position of audio pointer */
+
+// codec2
+struct CODEC2 *c2;
 
 /* Private function prototypes -----------------------------------------------*/
 
@@ -193,6 +197,9 @@ void AudioRecord_Test(void)
   AudioRemSize = 0;  
   /* Update the WrBuffer audio pointer position */
   CurrentPos = (uint16_t *)(WrBuffer);
+  
+  c2 = codec2_create(CODEC2_MODE_1200);
+  
   
   /* Play the recorded buffer */
   BSP_AUDIO_OUT_Play(WrBuffer , AudioTotalSize);
