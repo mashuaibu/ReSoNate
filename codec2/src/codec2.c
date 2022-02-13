@@ -106,7 +106,7 @@ struct CODEC2 * codec2_create(int mode)
     if (!((mode >= 0) && (mode <= CODEC2_MODE_700C))) {
         return NULL;
     }  
-
+//    int c2size = sizeof(struct CODEC2);
     c2 = (struct CODEC2*)malloc(sizeof(struct CODEC2));
     if (c2 == NULL)
 	return NULL;

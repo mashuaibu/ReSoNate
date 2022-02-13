@@ -21,7 +21,8 @@
 #include "audio_record.h"
 #include "string.h"
 #include "codec2.h"
-
+//#include "codec2_internal.h"
+#include <stdlib.h>
 /** @addtogroup STM32F4xx_HAL_Examples
   * @{
   */
@@ -198,9 +199,21 @@ void AudioRecord_Test(void)
   /* Update the WrBuffer audio pointer position */
   CurrentPos = (uint16_t *)(WrBuffer);
   
+  // codec2
   c2 = codec2_create(CODEC2_MODE_1200);
-  
-  
+  int nsam = codec2_samples_per_frame(c2);
+  short *buf = (short*)malloc(nsam*sizeof(short));
+  int nbit = codec2_bits_per_frame(c2);
+  unsigned char *bits = (unsigned char*)malloc(nbit*sizeof(char));
+  memcpy(buf, WrBuffer, nsam);
+  codec2_encode(c2, bits, buf);
+  codec2_decode(c2, buf, bits);
+  free(buf);
+  free(bits);
+  codec2_destroy(c2);
+  //c2 = (struct CODEC2*)malloc(sizeof(struct CODEC2));
+//  int sizeofInt = sizeof(int);
+//  int *testi = (int *)malloc(3000*sizeofInt);
   /* Play the recorded buffer */
   BSP_AUDIO_OUT_Play(WrBuffer , AudioTotalSize);
   

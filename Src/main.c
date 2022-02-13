@@ -19,7 +19,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-
+//#include "arm_math.h"
 /** @addtogroup STM32F4xx_HAL_Examples
   * @{
   */
@@ -80,6 +80,12 @@ int main(void)
   /* Configure the User Button in GPIO Mode */
   BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_EXTI);
 
+  // dsp
+//  float32_t FFT_Input_Q15_f[50];
+//  float32_t aFFT_Input_Q15[50];
+//  int FFT_Length = 1024;
+//  arm_float_to_q15((float32_t *)&FFT_Input_Q15_f[0], (q15_t *)&aFFT_Input_Q15[0], FFT_Length*2);
+  
   /* Toggle LEDs between each Test */
   while (!UserPressButton) Toggle_Leds();
   BSP_LED_Off(LED3);
@@ -207,17 +213,17 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 void Toggle_Leds(void)
 {
   BSP_LED_Toggle(LED3);
-  myDelay(100);
-//  HAL_Delay(100);
+//  myDelay(100);
+  HAL_Delay(100);
   BSP_LED_Toggle(LED4);
-  myDelay(100);
-//  HAL_Delay(100);
+//  myDelay(100);
+  HAL_Delay(100);
   BSP_LED_Toggle(LED5);
-  myDelay(100);
-//  HAL_Delay(100);
+//  myDelay(100);
+  HAL_Delay(100);
   BSP_LED_Toggle(LED6);
-  myDelay(100);
-//  HAL_Delay(100);
+//  myDelay(100);
+  HAL_Delay(100);
 }
 
 /**
