@@ -1125,7 +1125,7 @@ void codec2_decode_1300(struct CODEC2 *c2, short speech[], const unsigned char *
         model[0].voiced =  model[1].voiced = model[2].voiced = model[3].voiced = 0;
         e[3] = decode_energy(10, E_BITS);
         bw_expand_lsps(&lsps[3][0], LPC_ORD, 200.0, 200.0);
-        fprintf(stderr, "soft mute\n");
+//        fprintf(stderr, "soft mute\n");
     }
 
     /* interpolate ------------------------------------------------*/

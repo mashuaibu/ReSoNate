@@ -620,13 +620,15 @@ void AUDIO_IO_Init(void)
   CODEC_AUDIO_POWER_OFF();
   
   /* Wait for a delay to insure registers erasing */
-  HAL_Delay(5); 
+//  HAL_Delay(5); 
+  myDelay(5);
   
   /* Power on the codec */
   CODEC_AUDIO_POWER_ON();
   
   /* Wait for a delay to insure registers erasing */
-  HAL_Delay(5); 
+//  HAL_Delay(5); 
+  myDelay(5);
 }
 
 /**
@@ -742,5 +744,14 @@ uint8_t COMPASSACCELERO_IO_Read(uint16_t DeviceAddr, uint8_t RegisterAddr)
 /**
   * @}
   */   
+
+void myDelay(int delay)
+{
+  int i = 0;
+  while(i < delay*20000)
+  {
+    i++;
+  }
+}
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

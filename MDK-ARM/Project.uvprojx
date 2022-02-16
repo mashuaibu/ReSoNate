@@ -336,7 +336,7 @@
             <v6WtE>0</v6WtE>
             <v6Rtti>0</v6Rtti>
             <VariousControls>
-              <MiscControls>--C99</MiscControls>
+              <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F411xE,USE_STM32F411E_DISCO,CORTEX_M4,ARM_MATH_CM4,__EMBEDDED__,TIMER,__FPU_USED=1,__FPU_PRESENT=1</Define>
               <Undefine></Undefine>
               <IncludePath>../Inc;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/STM32F4xx_HAL_Driver/inc;../Drivers/BSP/STM32F411E-Discovery;..\codec2\src;..\codec2\stm32\STM32F4xx_DSP_StdPeriph_Lib\Libraries\CMSIS\Include</IncludePath>
@@ -414,9 +414,9 @@
               <FilePath>../Src/stm32f4xx_it.c</FilePath>
             </File>
             <File>
-              <FileName>gdb_stdio.c</FileName>
+              <FileName>stm32f4_timer.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Src\gdb_stdio.c</FilePath>
+              <FilePath>..\Src\stm32f4_timer.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -627,11 +627,6 @@
               <FileName>codebookd.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\codec2\src\codebookd.c</FilePath>
-            </File>
-            <File>
-              <FileName>dump.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\codec2\src\dump.c</FilePath>
             </File>
             <File>
               <FileName>codebookge.c</FileName>

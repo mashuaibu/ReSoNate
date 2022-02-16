@@ -203,17 +203,21 @@ void AudioRecord_Test(void)
   c2 = codec2_create(CODEC2_MODE_1200);
   int nsam = codec2_samples_per_frame(c2);
   short *buf = (short*)malloc(nsam*sizeof(short));
+//  short buf[nsam*sizeof(short)];
   int nbit = codec2_bits_per_frame(c2);
   unsigned char *bits = (unsigned char*)malloc(nbit*sizeof(char));
+//  unsigned char bits[nbit*sizeof(char)];
   memcpy(buf, WrBuffer, nsam);
+//  memset(buf, 0, nsam*sizeof(short));
+//  memset(bits, 0, nbit*sizeof(char));
   codec2_encode(c2, bits, buf);
+
   codec2_decode(c2, buf, bits);
   free(buf);
   free(bits);
   codec2_destroy(c2);
-  //c2 = (struct CODEC2*)malloc(sizeof(struct CODEC2));
-//  int sizeofInt = sizeof(int);
-//  int *testi = (int *)malloc(3000*sizeofInt);
+
+
   /* Play the recorded buffer */
   BSP_AUDIO_OUT_Play(WrBuffer , AudioTotalSize);
   
@@ -228,7 +232,6 @@ void AudioRecord_Test(void)
     Error_Handler();
   }
   
-  // after complete transfer out
 }
 
 /**

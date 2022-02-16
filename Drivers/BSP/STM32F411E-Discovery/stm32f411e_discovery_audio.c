@@ -361,7 +361,8 @@ uint8_t BSP_AUDIO_OUT_Stop(uint32_t Option)
     if(Option == CODEC_PDWN_HW)
     { 
       /* Wait at least 1ms */
-      HAL_Delay(1);
+      //HAL_Delay(1);
+      myDelay(1);
       
       /* Reset the pin */
       HAL_GPIO_WritePin(AUDIO_RESET_GPIO, AUDIO_RESET_PIN, GPIO_PIN_RESET);

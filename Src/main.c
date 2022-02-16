@@ -20,6 +20,9 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 //#include "arm_math.h"
+#include "audio_record.h"
+//#include "string.h"
+//#include "codec2.h"
 /** @addtogroup STM32F4xx_HAL_Examples
   * @{
   */
@@ -33,12 +36,12 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 uint8_t DemoIndex = 0;
-BSP_DemoTypedef  BSP_examples[]={
-//  {ACCELERO_MEMS_Test, "LSM303DLHC/LSM303AGR", 0},
-//  {GYRO_MEMS_Test, "L3GD20TR/I3G4250D", 1},
-//  {AudioPlay_Test, "CS43L22", 2},
-  {AudioRecord_Test, "MP45DT02TR-M/IMP34DT05TR", 3},
-};
+//BSP_DemoTypedef  BSP_examples[]={
+////  {ACCELERO_MEMS_Test, "LSM303DLHC/LSM303AGR", 0},
+////  {GYRO_MEMS_Test, "L3GD20TR/I3G4250D", 1},
+////  {AudioPlay_Test, "CS43L22", 2},
+//  {AudioRecord_Test, "MP45DT02TR-M/IMP34DT05TR", 3},
+//};
 
 __IO uint8_t UserPressButton = 0;
 
@@ -50,7 +53,6 @@ __IO uint32_t PressCount = 0;
 
 /* Private function prototypes -----------------------------------------------*/
 static void SystemClock_Config(void);
-static void myDelay(int delay);
 /* Private functions ---------------------------------------------------------*/
 
 /**
@@ -88,23 +90,27 @@ int main(void)
   
   /* Toggle LEDs between each Test */
   while (!UserPressButton) Toggle_Leds();
+//  HAL_Delay(2000);
   BSP_LED_Off(LED3);
   BSP_LED_Off(LED4);
   BSP_LED_Off(LED5);
   BSP_LED_Off(LED6);
+//  AudioRecord_Test();
 
   /* 1. Start Test: Wait For User inputs -------------------------------------*/
   while (1)
   {
     UserPressButton = 0;
-    BSP_examples[DemoIndex++].DemoFunc();
+//    BSP_examples[DemoIndex++].DemoFunc();
 
-    /* If all Demo has been already executed, Reset DemoIndex to restart BSP example*/
-    if(DemoIndex >= COUNT_OF_EXAMPLE(BSP_examples))
-    {
-      DemoIndex = 0;
-    }
-    /* Toggle LEDs between each Test */
+//    /* If all Demo has been already executed, Reset DemoIndex to restart BSP example*/
+//    if(DemoIndex >= COUNT_OF_EXAMPLE(BSP_examples))
+//    {
+//      DemoIndex = 0;
+//    
+    
+   AudioRecord_Test();
+//    /* Toggle LEDs between each Test */
     UserPressButton = 0;
     while (!UserPressButton) Toggle_Leds();
     BSP_LED_Off(LED3);
@@ -213,17 +219,17 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 void Toggle_Leds(void)
 {
   BSP_LED_Toggle(LED3);
-//  myDelay(100);
-  HAL_Delay(100);
+  myDelay(100);
+//  HAL_Delay(100);
   BSP_LED_Toggle(LED4);
-//  myDelay(100);
-  HAL_Delay(100);
+  myDelay(100);
+//  HAL_Delay(100);
   BSP_LED_Toggle(LED5);
-//  myDelay(100);
-  HAL_Delay(100);
+  myDelay(100);
+//  HAL_Delay(100);
   BSP_LED_Toggle(LED6);
-//  myDelay(100);
-  HAL_Delay(100);
+  myDelay(100);
+//  HAL_Delay(100);
 }
 
 /**
@@ -261,15 +267,8 @@ void assert_failed(uint8_t* file, uint32_t line)
 }
 #endif
 
-static void myDelay(int delay)
-{
-  int i = 0;
-  while(i < delay*20000)
-  {
-    i++;
-  }
-  
-}
+
+
 
 /**
   * @}

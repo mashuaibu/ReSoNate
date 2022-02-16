@@ -301,6 +301,11 @@ uint32_t BSP_PB_GetState(Button_TypeDef Button);
 /**
   * @}
   */ 
+  
+  
+  
+void myDelay(int delay);
+
 
 #ifdef __cplusplus
 }
