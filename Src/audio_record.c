@@ -205,7 +205,8 @@ void AudioRecord_Test(void)
   short *buf = (short*)malloc(nsam*sizeof(short));
 //  short buf[nsam*sizeof(short)];
   int nbit = codec2_bits_per_frame(c2);
-  unsigned char *bits = (unsigned char*)malloc(nbit*sizeof(char));
+  int nbyte = (nbit + 7) / 8;
+  unsigned char *bits = (unsigned char*)malloc(nbyte*sizeof(char));
 //  unsigned char bits[nbit*sizeof(char)];
   memcpy(buf, WrBuffer, nsam);
 //  memset(buf, 0, nsam*sizeof(short));

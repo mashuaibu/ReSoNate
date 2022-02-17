@@ -3,7 +3,7 @@
 <title>Static Call Graph - [STM32F411E-Discovery\STM32F411E-Discovery.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image STM32F411E-Discovery\STM32F411E-Discovery.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Wed Feb 16 20:45:32 2022
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Thu Feb 17 16:55:11 2022
 <BR><P>
 <H3>Maximum Stack Usage =      16204 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -844,7 +844,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CODEC_IO_Write
 </UL>
 
-<P><STRONG><a name="[a6]"></a>AudioRecord_Test</STRONG> (Thumb, 512 bytes, Stack size 24 bytes, audio_record.o(i.AudioRecord_Test))
+<P><STRONG><a name="[a6]"></a>AudioRecord_Test</STRONG> (Thumb, 522 bytes, Stack size 24 bytes, audio_record.o(i.AudioRecord_Test))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16204 + Unknown Stack Size
 <LI>Call Chain = AudioRecord_Test &rArr; codec2_decode &rArr; codec2_decode_ber &rArr; codec2_decode_1600 &rArr; aks_to_M2 &rArr; lpc_post_filter &rArr; codec2_fftr &rArr; arm_rfft_fast_f32 &rArr; arm_cfft_f32 &rArr; arm_cfft_radix8by4_f32 &rArr; arm_radix8_butterfly_f32
 </UL>
@@ -2861,8 +2861,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[154]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;synthesise_one_frame
 </UL>
 
-<P><STRONG><a name="[154]"></a>synthesise_one_frame</STRONG> (Thumb, 240 bytes, Stack size 672 bytes, codec2.o(i.synthesise_one_frame))
-<BR><BR>[Stack]<UL><LI>Max Depth = 5300 + Unknown Stack Size
+<P><STRONG><a name="[154]"></a>synthesise_one_frame</STRONG> (Thumb, 240 bytes, Stack size 680 bytes, codec2.o(i.synthesise_one_frame))
+<BR><BR>[Stack]<UL><LI>Max Depth = 5308 + Unknown Stack Size
 <LI>Call Chain = synthesise_one_frame &rArr; synthesise &rArr; arm_rfft_fast_f32 &rArr; arm_cfft_f32 &rArr; arm_cfft_radix8by4_f32 &rArr; arm_radix8_butterfly_f32
 </UL>
 <BR>[Calls]<UL><LI><a href="#[18b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;synthesise

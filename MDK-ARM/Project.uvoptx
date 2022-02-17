@@ -152,9 +152,9 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>213</LineNumber>
+          <LineNumber>214</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134222398</Address>
+          <Address>134220794</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -163,14 +163,14 @@
           <BreakIfRCount>1</BreakIfRCount>
           <Filename>../Src/audio_record.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\STM32F411E_Discovery\../Src/audio_record.c\213</Expression>
+          <Expression>\\STM32F411E_Discovery\../Src/audio_record.c\214</Expression>
         </Bp>
         <Bp>
           <Number>1</Number>
           <Type>0</Type>
           <LineNumber>1342</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134241500</Address>
+          <Address>134258438</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -186,7 +186,7 @@
           <Type>0</Type>
           <LineNumber>1337</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134241460</Address>
+          <Address>134258398</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -202,7 +202,7 @@
           <Type>0</Type>
           <LineNumber>2016</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134262102</Address>
+          <Address>134280444</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -212,22 +212,6 @@
           <Filename>..\codec2\src\codec2.c</Filename>
           <ExecCommand></ExecCommand>
           <Expression>\\STM32F411E_Discovery\../codec2/src/codec2.c\2016</Expression>
-        </Bp>
-        <Bp>
-          <Number>4</Number>
-          <Type>0</Type>
-          <LineNumber>211</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134222380</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>../Src/audio_record.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\STM32F411E_Discovery\../Src/audio_record.c\211</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -250,6 +234,11 @@
           <count>3</count>
           <WinNumber>1</WinNumber>
           <ItemText>c2</ItemText>
+        </Ww>
+        <Ww>
+          <count>4</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>H[80]</ItemText>
         </Ww>
       </WatchWindow1>
       <MemoryWindow1>
