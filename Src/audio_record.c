@@ -53,7 +53,7 @@ typedef enum
 uint8_t  pHeaderBuff[44];
 uint16_t WrBuffer[WR_BUFFER_SIZE];
 
-static uint16_t RecBuf[2*PCM_OUT_SIZE];
+static uint16_t RecBuf[PCM_OUT_SIZE];
 static uint16_t InternalBuffer[INTERNAL_BUFF_SIZE];
 __IO uint32_t ITCounter = 0;
 Audio_BufferTypeDef  BufferCtl;
@@ -117,7 +117,7 @@ void AudioRecord_Test(void)
       BSP_AUDIO_IN_PDMToPCM((uint16_t*)&InternalBuffer[0], (uint16_t*)&RecBuf[0]);
 
       /* Copy PCM data in internal buffer */
-      memcpy((uint16_t*)&WrBuffer[ITCounter * (PCM_OUT_SIZE*2)], RecBuf, PCM_OUT_SIZE*4); // 3rd arg is number of bytes, uint16_t is 2 bytes
+      memcpy((uint16_t*)&WrBuffer[ITCounter * (PCM_OUT_SIZE)], RecBuf, PCM_OUT_SIZE*2); // 3rd arg is number of bytes, uint16_t is 2 bytes
       
       BufferCtl.offset = BUFFER_OFFSET_NONE;
       
@@ -146,7 +146,7 @@ void AudioRecord_Test(void)
       BSP_AUDIO_IN_PDMToPCM((uint16_t*)&InternalBuffer[INTERNAL_BUFF_SIZE/2], (uint16_t*)&RecBuf[0]);
       
       /* Copy PCM data in internal buffer */
-      memcpy((uint16_t*)&WrBuffer[ITCounter * (PCM_OUT_SIZE*2)], RecBuf, PCM_OUT_SIZE*4);
+      memcpy((uint16_t*)&WrBuffer[ITCounter * (PCM_OUT_SIZE)], RecBuf, PCM_OUT_SIZE*2);
       
       BufferCtl.offset = BUFFER_OFFSET_NONE;
       
@@ -200,7 +200,7 @@ void AudioRecord_Test(void)
   CurrentPos = (uint16_t *)(WrBuffer);
   
   /********** codec 2 **********/
-  c2 = codec2_create(CODEC2_MODE_3200);
+  c2 = codec2_create(CODEC2_MODE_1600);
   int nsam = codec2_samples_per_frame(c2);
   short *buf = (short*)malloc(nsam*sizeof(short));
   int nbit = codec2_bits_per_frame(c2);
@@ -209,9 +209,9 @@ void AudioRecord_Test(void)
 
   int i = 0;
   int copyLen = 0;
-  while(i < WR_BUFFER_SIZE) {
-    if(i + nsam > WR_BUFFER_SIZE) {
-      copyLen = WR_BUFFER_SIZE-i;
+  while(i < WR_BUFFER_SIZE/2) {
+    if(i + nsam > WR_BUFFER_SIZE/2) {
+      copyLen = WR_BUFFER_SIZE/2-i;
     } else {
       copyLen = nsam;
     }
@@ -221,15 +221,20 @@ void AudioRecord_Test(void)
     memcpy(&WrBuffer[i], buf, copyLen);
     i += nsam;
   }
-//  memcpy(buf, WrBuffer, nsam);
-
-//  codec2_encode(c2, bits, buf);
-//  codec2_decode(c2, buf, bits);
+  
   free(buf);
   free(bits);
   codec2_destroy(c2);
   /********** codec 2 **********/
 
+  // duplicate sample in output, make it stereo
+  i = WR_BUFFER_SIZE/2 - 1;
+  while(i >= 0) {
+    WrBuffer[2*i] = WrBuffer[i];
+    WrBuffer[2*i + 1] = WrBuffer[i];
+    i--;
+  }
+  
   /* Play the recorded buffer */
   BSP_AUDIO_OUT_Play(WrBuffer , AudioTotalSize);
   

@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F411xE,USE_STM32F411E_DISCO,CORTEX_M4,ARM_MATH_CM4,__EMBEDDED__,TIMER,__FPU_USED=1,__FPU_PRESENT=1</Define>
               <Undefine></Undefine>
-              <IncludePath>../Inc;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/STM32F4xx_HAL_Driver/inc;../Drivers/BSP/STM32F411E-Discovery;..\codec2\src;..\codec2\stm32\STM32F4xx_DSP_StdPeriph_Lib\Libraries\CMSIS\Include</IncludePath>
+              <IncludePath>../Inc;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/STM32F4xx_HAL_Driver/inc;../Drivers/BSP/STM32F411E-Discovery;..\codec2\src;..\codec2\stm32\STM32F4xx_DSP_StdPeriph_Lib\Libraries\CMSIS\Include;..\Middlewares\ST\STM32_Audio\Addons\PDM\Inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
