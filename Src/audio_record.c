@@ -215,10 +215,10 @@ void AudioRecord_Test(void)
     } else {
       copyLen = nsam;
     }
-    memcpy(buf, &WrBuffer[i], copyLen);
+    memcpy(buf, &WrBuffer[i], copyLen*2);
     codec2_encode(c2, bits, buf);
     codec2_decode(c2, buf, bits);
-    memcpy(&WrBuffer[i], buf, copyLen);
+    memcpy(&WrBuffer[i], buf, copyLen*2);
     i += nsam;
   }
   

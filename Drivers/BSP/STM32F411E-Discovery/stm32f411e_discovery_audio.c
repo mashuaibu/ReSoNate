@@ -735,8 +735,9 @@ uint8_t BSP_AUDIO_IN_Init(uint32_t AudioFreq, uint32_t BitRes, uint32_t ChnlNbr)
   BSP_AUDIO_IN_ClockConfig(&hAudioInI2s, AudioFreq, NULL);
   
   /* Configure the PDM library */
-  /* On STM32F411E-Discovery a single microphone is mounted, samples are duplicated
-     to make stereo audio streams */
+//  /* On STM32F411E-Discovery a single microphone is mounted, samples are duplicated
+//     to make stereo audio streams */
+  /* In codec2 we only need mono stream */
   PDMDecoder_Init(AudioFreq, ChnlNbr, 1);
 
   /* Configure the I2S peripheral */
