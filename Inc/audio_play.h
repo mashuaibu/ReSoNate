@@ -29,7 +29,7 @@
 /* Exported macro ------------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
-void AudioPlay_Test(void);
+//void AudioPlay_Test(void);
 #endif /* __AUDIO_PLAY_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

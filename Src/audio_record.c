@@ -32,7 +32,7 @@
   */
 
 /* Private typedef -----------------------------------------------------------*/
-#define AUDIO_BUFFER_SIZE   8192
+//#define AUDIO_BUFFER_SIZE   8192
 
 typedef struct {
   int32_t offset;
@@ -200,7 +200,7 @@ void AudioRecord_Test(void)
   CurrentPos = (uint16_t *)(WrBuffer);
   
   /********** codec 2 **********/
-  c2 = codec2_create(CODEC2_MODE_1600);
+  c2 = codec2_create(CODEC2_MODE_1300);
   int nsam = codec2_samples_per_frame(c2);
   short *buf = (short*)malloc(nsam*sizeof(short));
   int nbit = codec2_bits_per_frame(c2);

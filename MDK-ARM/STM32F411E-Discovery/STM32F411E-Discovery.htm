@@ -3,7 +3,7 @@
 <title>Static Call Graph - [STM32F411E-Discovery\STM32F411E-Discovery.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image STM32F411E-Discovery\STM32F411E-Discovery.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Fri Feb 18 17:54:27 2022
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Sat Feb 19 11:45:48 2022
 <BR><P>
 <H3>Maximum Stack Usage =      16212 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -1015,7 +1015,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[a6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;AudioRecord_Test
 </UL>
 
-<P><STRONG><a name="[cd]"></a>BSP_AUDIO_OUT_TransferComplete_CallBack</STRONG> (Thumb, 242 bytes, Stack size 8 bytes, audio_play.o(i.BSP_AUDIO_OUT_TransferComplete_CallBack))
+<P><STRONG><a name="[cd]"></a>BSP_AUDIO_OUT_TransferComplete_CallBack</STRONG> (Thumb, 148 bytes, Stack size 8 bytes, audio_play.o(i.BSP_AUDIO_OUT_TransferComplete_CallBack))
 <BR><BR>[Stack]<UL><LI>Max Depth = 92<LI>Call Chain = BSP_AUDIO_OUT_TransferComplete_CallBack &rArr; BSP_AUDIO_OUT_ChangeBuffer &rArr; HAL_I2S_Transmit_DMA &rArr; HAL_DMA_Start_IT &rArr; DMA_SetConfig
 </UL>
 <BR>[Calls]<UL><LI><a href="#[c7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_AUDIO_OUT_ChangeBuffer
@@ -1170,7 +1170,7 @@ Global Symbols
 <LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_I2S_Receive_DMA
 </UL>
 
-<P><STRONG><a name="[de]"></a>HAL_GPIO_EXTI_Callback</STRONG> (Thumb, 64 bytes, Stack size 8 bytes, main.o(i.HAL_GPIO_EXTI_Callback))
+<P><STRONG><a name="[de]"></a>HAL_GPIO_EXTI_Callback</STRONG> (Thumb, 28 bytes, Stack size 8 bytes, main.o(i.HAL_GPIO_EXTI_Callback))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = HAL_GPIO_EXTI_Callback &rArr; BSP_PB_GetState
 </UL>
 <BR>[Calls]<UL><LI><a href="#[d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_PB_GetState
@@ -1402,9 +1402,9 @@ Global Symbols
 <P><STRONG><a name="[fc]"></a>HAL_Init</STRONG> (Thumb, 54 bytes, Stack size 8 bytes, stm32f4xx_hal.o(i.HAL_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = HAL_Init &rArr; HAL_InitTick &rArr; HAL_NVIC_SetPriority &rArr; NVIC_SetPriority
 </UL>
-<BR>[Calls]<UL><LI><a href="#[fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_NVIC_SetPriorityGrouping
+<BR>[Calls]<UL><LI><a href="#[ff]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_MspInit
+<LI><a href="#[fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_NVIC_SetPriorityGrouping
 <LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_InitTick
-<LI><a href="#[ff]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_MspInit
 </UL>
 <BR>[Called By]<UL><LI><a href="#[7c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
@@ -2663,7 +2663,7 @@ Global Symbols
 <LI><a href="#[160]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;codec2_decode_3200
 </UL>
 
-<P><STRONG><a name="[7c]"></a>main</STRONG> (Thumb, 136 bytes, Stack size 0 bytes, main.o(i.main))
+<P><STRONG><a name="[7c]"></a>main</STRONG> (Thumb, 130 bytes, Stack size 0 bytes, main.o(i.main))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16212 + Unknown Stack Size
 <LI>Call Chain = main &rArr; AudioRecord_Test &rArr; codec2_decode &rArr; codec2_decode_ber &rArr; codec2_decode_1600 &rArr; aks_to_M2 &rArr; lpc_post_filter &rArr; codec2_fftr &rArr; arm_rfft_fast_f32 &rArr; arm_cfft_f32 &rArr; arm_cfft_radix8by4_f32 &rArr; arm_radix8_butterfly_f32
 </UL>

@@ -35,13 +35,6 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-uint8_t DemoIndex = 0;
-//BSP_DemoTypedef  BSP_examples[]={
-////  {ACCELERO_MEMS_Test, "LSM303DLHC/LSM303AGR", 0},
-////  {GYRO_MEMS_Test, "L3GD20TR/I3G4250D", 1},
-////  {AudioPlay_Test, "CS43L22", 2},
-//  {AudioRecord_Test, "MP45DT02TR-M/IMP34DT05TR", 3},
-//};
 
 __IO uint8_t UserPressButton = 0;
 
@@ -82,35 +75,20 @@ int main(void)
   /* Configure the User Button in GPIO Mode */
   BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_EXTI);
 
-  // dsp
-//  float32_t FFT_Input_Q15_f[50];
-//  float32_t aFFT_Input_Q15[50];
-//  int FFT_Length = 1024;
-//  arm_float_to_q15((float32_t *)&FFT_Input_Q15_f[0], (q15_t *)&aFFT_Input_Q15[0], FFT_Length*2);
   
   /* Toggle LEDs between each Test */
   while (!UserPressButton) Toggle_Leds();
-//  HAL_Delay(2000);
   BSP_LED_Off(LED3);
   BSP_LED_Off(LED4);
   BSP_LED_Off(LED5);
   BSP_LED_Off(LED6);
-//  AudioRecord_Test();
 
   /* 1. Start Test: Wait For User inputs -------------------------------------*/
   while (1)
   {
-    UserPressButton = 0;
-//    BSP_examples[DemoIndex++].DemoFunc();
-
-//    /* If all Demo has been already executed, Reset DemoIndex to restart BSP example*/
-//    if(DemoIndex >= COUNT_OF_EXAMPLE(BSP_examples))
-//    {
-//      DemoIndex = 0;
-//    
     
-   AudioRecord_Test();
-//    /* Toggle LEDs between each Test */
+    AudioRecord_Test();
+    /* Toggle LEDs between each Test */
     UserPressButton = 0;
     while (!UserPressButton) Toggle_Leds();
     BSP_LED_Off(LED3);
@@ -194,21 +172,21 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     UserPressButton = 1;
   }
 
-  if(ACCELERO_INT1_PIN == GPIO_Pin)
-  {
-    if (PressCount == 1)
-    {
-      /* Resume playing Wave status */
-      PauseResumeStatus = RESUME_STATUS;
-      PressCount = 0;
-    }
-    else
-    {
-      /* Pause playing Wave status */
-      PauseResumeStatus = PAUSE_STATUS;
-      PressCount = 1;
-    }
-  }
+//  if(ACCELERO_INT1_PIN == GPIO_Pin)
+//  {
+//    if (PressCount == 1)
+//    {
+//      /* Resume playing Wave status */
+//      PauseResumeStatus = RESUME_STATUS;
+//      PressCount = 0;
+//    }
+//    else
+//    {
+//      /* Pause playing Wave status */
+//      PauseResumeStatus = PAUSE_STATUS;
+//      PressCount = 1;
+//    }
+//  }
 }
 
 /**

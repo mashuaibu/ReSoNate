@@ -31,15 +31,8 @@
 #include <stdio.h>
 
 /* Exported types ------------------------------------------------------------*/
-typedef struct
-{
-  void   (*DemoFunc)(void);
-  uint8_t DemoName[50]; 
-  uint32_t DemoIndex;
-}BSP_DemoTypedef;
 
 /* Exported constants --------------------------------------------------------*/
-#define COUNT_OF_EXAMPLE(x)    (sizeof(x)/sizeof(BSP_DemoTypedef))
 
 /* Size of the recorder buffer (Multiple of 4096, RAM_BUFFER_SIZE used in BSP)*/
 //#define WR_BUFFER_SIZE           0x7000

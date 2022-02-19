@@ -29,38 +29,38 @@
   */
 
 /* Private typedef -----------------------------------------------------------*/
-typedef struct
-{
-  uint32_t   ChunkID;       /* 0 */ 
-  uint32_t   FileSize;      /* 4 */
-  uint32_t   FileFormat;    /* 8 */
-  uint32_t   SubChunk1ID;   /* 12 */
-  uint32_t   SubChunk1Size; /* 16*/  
-  uint16_t   AudioFormat;   /* 20 */ 
-  uint16_t   NbrChannels;   /* 22 */   
-  uint32_t   SampleRate;    /* 24 */
-  
-  uint32_t   ByteRate;      /* 28 */
-  uint16_t   BlockAlign;    /* 32 */  
-  uint16_t   BitPerSample;  /* 34 */  
-  uint32_t   SubChunk2ID;   /* 36 */   
-  uint32_t   SubChunk2Size; /* 40 */    
+//typedef struct
+//{
+//  uint32_t   ChunkID;       /* 0 */ 
+//  uint32_t   FileSize;      /* 4 */
+//  uint32_t   FileFormat;    /* 8 */
+//  uint32_t   SubChunk1ID;   /* 12 */
+//  uint32_t   SubChunk1Size; /* 16*/  
+//  uint16_t   AudioFormat;   /* 20 */ 
+//  uint16_t   NbrChannels;   /* 22 */   
+//  uint32_t   SampleRate;    /* 24 */
+//  
+//  uint32_t   ByteRate;      /* 28 */
+//  uint16_t   BlockAlign;    /* 32 */  
+//  uint16_t   BitPerSample;  /* 34 */  
+//  uint32_t   SubChunk2ID;   /* 36 */   
+//  uint32_t   SubChunk2Size; /* 40 */    
 
-}WAVE_FormatTypeDef;
+//}WAVE_FormatTypeDef;
 
 /* Private define ------------------------------------------------------------*/
 
 /* Audio file size and start address are defined here since the Audio file is 
    stored in Flash memory as a constant table of 16-bit data */
-#define AUDIO_FILE_SIZE               0x20000
-#define AUDIO_FILE_ADDRESS            0x08020000   /* Audio file address */  
+//#define AUDIO_FILE_SIZE               0x20000
+//#define AUDIO_FILE_ADDRESS            0x08020000   /* Audio file address */  
   
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 extern __IO uint8_t UserPressButton;
 extern __IO uint32_t PauseResumeStatus;
 
-WAVE_FormatTypeDef *waveformat =  NULL;
+//WAVE_FormatTypeDef *waveformat =  NULL;
 
 /* Variable used to replay audio sample (from play or record test)*/
 __IO uint32_t AudioTest = 0;
@@ -82,68 +82,68 @@ extern uint16_t WrBuffer[WR_BUFFER_SIZE];
   * @param  None
   * @retval None
   */
-void AudioPlay_Test(void)
-{  
-  /* Initial volume level (from 0 (Mute) to 100 (Max)) */
-  __IO uint8_t volume = 70;
-  
-  /* Turn ON LED6: start of Audio file play */
-  BSP_LED_On(LED6);
-  
-  /* Retrieve Wave Sample rate*/
-  waveformat = (WAVE_FormatTypeDef*) AUDIO_FILE_ADDRESS;
-  
-  /* Initialize Audio Device */
-  if(BSP_AUDIO_OUT_Init(OUTPUT_DEVICE_AUTO, volume, waveformat->SampleRate) != 0)
-  {
-    Error_Handler();
-  }
-  
-  /*Set variable used to stop player before starting */
-  UserPressButton = 0;
-  AudioTest = 0;
-  
-  /* Set the total number of data to be played */
-  AudioTotalSize = AUDIO_FILE_SIZE;  
-  /* Set the current audio pointer position */
-  CurrentPos = (uint16_t *)(AUDIO_FILE_ADDRESS);
-  /* Start the audio player */
-  BSP_AUDIO_OUT_Play(CurrentPos, AudioTotalSize);  
-  /* Update the remaining number of data to be played */
-  AudioRemSize = AudioTotalSize - AUDIODATA_SIZE * DMA_MAX(AudioTotalSize);   
-  /* Update the current audio pointer position */
-  CurrentPos += DMA_MAX(AudioTotalSize);
-  
-  /* Infinite loop */
-  while(!UserPressButton)
-  { 
-    if (PauseResumeStatus == PAUSE_STATUS)
-    {
-      /* Turn ON LED4: Audio play in pause */
-      BSP_LED_On(LED4);
-      
-      /* Pause playing */
-      BSP_AUDIO_OUT_Pause();
-      PauseResumeStatus = IDLE_STATUS;
-    }
-    else if (PauseResumeStatus == RESUME_STATUS)
-    {
-      /* Turn OFF LED4: Audio play running */
-      BSP_LED_Off(LED4);
-      
-      /* Resume playing */
-      BSP_AUDIO_OUT_Resume();
-      PauseResumeStatus = IDLE_STATUS;
-    }
-  }
-  
-  /* Stop Player before close Test */
-  if (BSP_AUDIO_OUT_Stop(CODEC_PDWN_HW) != AUDIO_OK)
-  {
-    /* Audio Stop error */
-    Error_Handler();
-  }
-}
+//void AudioPlay_Test(void)
+//{  
+//  /* Initial volume level (from 0 (Mute) to 100 (Max)) */
+//  __IO uint8_t volume = 70;
+//  
+//  /* Turn ON LED6: start of Audio file play */
+//  BSP_LED_On(LED6);
+//  
+//  /* Retrieve Wave Sample rate*/
+//  waveformat = (WAVE_FormatTypeDef*) AUDIO_FILE_ADDRESS;
+//  
+//  /* Initialize Audio Device */
+//  if(BSP_AUDIO_OUT_Init(OUTPUT_DEVICE_AUTO, volume, waveformat->SampleRate) != 0)
+//  {
+//    Error_Handler();
+//  }
+//  
+//  /*Set variable used to stop player before starting */
+//  UserPressButton = 0;
+//  AudioTest = 0;
+//  
+//  /* Set the total number of data to be played */
+//  AudioTotalSize = AUDIO_FILE_SIZE;  
+//  /* Set the current audio pointer position */
+//  CurrentPos = (uint16_t *)(AUDIO_FILE_ADDRESS);
+//  /* Start the audio player */
+//  BSP_AUDIO_OUT_Play(CurrentPos, AudioTotalSize);  
+//  /* Update the remaining number of data to be played */
+//  AudioRemSize = AudioTotalSize - AUDIODATA_SIZE * DMA_MAX(AudioTotalSize);   
+//  /* Update the current audio pointer position */
+//  CurrentPos += DMA_MAX(AudioTotalSize);
+//  
+//  /* Infinite loop */
+//  while(!UserPressButton)
+//  { 
+//    if (PauseResumeStatus == PAUSE_STATUS)
+//    {
+//      /* Turn ON LED4: Audio play in pause */
+//      BSP_LED_On(LED4);
+//      
+//      /* Pause playing */
+//      BSP_AUDIO_OUT_Pause();
+//      PauseResumeStatus = IDLE_STATUS;
+//    }
+//    else if (PauseResumeStatus == RESUME_STATUS)
+//    {
+//      /* Turn OFF LED4: Audio play running */
+//      BSP_LED_Off(LED4);
+//      
+//      /* Resume playing */
+//      BSP_AUDIO_OUT_Resume();
+//      PauseResumeStatus = IDLE_STATUS;
+//    }
+//  }
+//  
+//  /* Stop Player before close Test */
+//  if (BSP_AUDIO_OUT_Stop(CODEC_PDWN_HW) != AUDIO_OK)
+//  {
+//    /* Audio Stop error */
+//    Error_Handler();
+//  }
+//}
 
 /*--------------------------------
 Callbacks implementation:
@@ -177,19 +177,19 @@ void BSP_AUDIO_OUT_TransferComplete_CallBack()
     replay = 1;
   }
 
-  /* Audio sample used for play */
-  if((AudioTest == 0) && (replay == 1))
-  {
-    /* Replay from the beginning */
-    /* Set the current audio pointer position */
-    CurrentPos = (uint16_t *)(AUDIO_FILE_ADDRESS);
-    /* Replay from the beginning */
-    BSP_AUDIO_OUT_Play(CurrentPos, AudioTotalSize);
-    /* Update the remaining number of data to be played */
-    AudioRemSize = AudioTotalSize - AUDIODATA_SIZE * DMA_MAX(AudioTotalSize);  
-    /* Update the current audio pointer position */
-    CurrentPos += DMA_MAX(AudioTotalSize);
-  }
+//  /* Audio sample used for play */
+//  if((AudioTest == 0) && (replay == 1))
+//  {
+//    /* Replay from the beginning */
+//    /* Set the current audio pointer position */
+//    CurrentPos = (uint16_t *)(AUDIO_FILE_ADDRESS);
+//    /* Replay from the beginning */
+//    BSP_AUDIO_OUT_Play(CurrentPos, AudioTotalSize);
+//    /* Update the remaining number of data to be played */
+//    AudioRemSize = AudioTotalSize - AUDIODATA_SIZE * DMA_MAX(AudioTotalSize);  
+//    /* Update the current audio pointer position */
+//    CurrentPos += DMA_MAX(AudioTotalSize);
+//  }
   
   /* Audio sample saved during record */  // commment this to not repeat play record
   if((AudioTest == 1) && (replay == 1))
