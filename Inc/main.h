@@ -33,6 +33,21 @@
 /* Exported types ------------------------------------------------------------*/
 
 /* Exported constants --------------------------------------------------------*/
+// LoRa related pins
+#define L3GD20_CS_Pin GPIO_PIN_3
+#define L3GD20_CS_GPIO_Port GPIOE
+#define LoRa_IRQ_Pin GPIO_PIN_2
+#define LoRa_IRQ_GPIO_Port GPIOA
+#define SPI1_SCK_Pin GPIO_PIN_5
+#define SPI1_SCK_GPIO_Port GPIOA
+#define SPI1_MISO_Pin GPIO_PIN_6
+#define SPI1_MISO_GPIO_Port GPIOA
+#define SPI1_MOSI_Pin GPIO_PIN_7
+#define SPI1_MOSI_GPIO_Port GPIOA
+#define LoRa_RESET_Pin GPIO_PIN_9
+#define LoRa_RESET_GPIO_Port GPIOC
+#define LoRa_CS_Pin GPIO_PIN_10
+#define LoRa_CS_GPIO_Port GPIOA
 
 /* Size of the recorder buffer (Multiple of 4096, RAM_BUFFER_SIZE used in BSP)*/
 //#define WR_BUFFER_SIZE           0x7000

@@ -322,7 +322,7 @@
             <PlainCh>0</PlainCh>
             <Ropi>0</Ropi>
             <Rwpi>0</Rwpi>
-            <wLevel>2</wLevel>
+            <wLevel>0</wLevel>
             <uThumb>0</uThumb>
             <uSurpInc>1</uSurpInc>
             <uC99>1</uC99>
@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F411xE,USE_STM32F411E_DISCO,CORTEX_M4,ARM_MATH_CM4,__EMBEDDED__,TIMER,__FPU_USED=1,__FPU_PRESENT=1</Define>
               <Undefine></Undefine>
-              <IncludePath>../Inc;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/STM32F4xx_HAL_Driver/inc;../Drivers/BSP/STM32F411E-Discovery;..\codec2\src;..\codec2\stm32\STM32F4xx_DSP_StdPeriph_Lib\Libraries\CMSIS\Include;..\Middlewares\ST\STM32_Audio\Addons\PDM\Inc</IncludePath>
+              <IncludePath>../Inc;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/STM32F4xx_HAL_Driver/inc;../Drivers/BSP/STM32F411E-Discovery;..\codec2\src;..\codec2\stm32\STM32F4xx_DSP_StdPeriph_Lib\Libraries\CMSIS\Include;..\Middlewares\ST\STM32_Audio\Addons\PDM\Inc;..\lora</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -417,6 +417,11 @@
               <FileName>stm32f4_timer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Src\stm32f4_timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_hal_msp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\stm32f4xx_hal_msp.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -552,6 +557,11 @@
               <FileName>stm32f4xx_hal_rcc_ex.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_hal_uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_uart.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2007,6 +2017,21 @@
               <FileName>arm_bitreversal2.S</FileName>
               <FileType>2</FileType>
               <FilePath>..\codec2\stm32\STM32F4xx_DSP_StdPeriph_Lib\Libraries\CMSIS\DSP_Lib\Source\TransformFunctions\arm_bitreversal2.S</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>lora</GroupName>
+          <Files>
+            <File>
+              <FileName>SX1278.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\lora\SX1278.c</FilePath>
+            </File>
+            <File>
+              <FileName>SX1278_hw.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\lora\SX1278_hw.c</FilePath>
             </File>
           </Files>
         </Group>
