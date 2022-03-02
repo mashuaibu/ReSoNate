@@ -21,8 +21,9 @@
 #include "audio_record.h"
 #include "string.h"
 #include "codec2.h"
-//#include "codec2_internal.h"
 #include <stdlib.h>
+#include "SX1278.h"
+
 /** @addtogroup STM32F4xx_HAL_Examples
   * @{
   */
@@ -75,6 +76,8 @@ extern uint16_t *CurrentPos;   /* This variable holds the current position of au
 // codec2
 struct CODEC2 *c2;
 
+extern SX1278_t SX1278;
+extern UART_HandleTypeDef huart1;
 /* Private function prototypes -----------------------------------------------*/
 
 /* Private functions ---------------------------------------------------------*/
@@ -88,97 +91,7 @@ struct CODEC2 *c2;
   */
 void AudioRecord_Test(void)
 {
-  BufferCtl.offset = BUFFER_OFFSET_NONE;
-  if(BSP_AUDIO_IN_Init(DEFAULT_AUDIO_IN_FREQ, DEFAULT_AUDIO_IN_BIT_RESOLUTION, DEFAULT_AUDIO_IN_CHANNEL_NBR) != AUDIO_OK)
-  {
-    /* Record Error */
-    Error_Handler();
-  }  
-
-  /* Turn ON LED3: start record */
-  BSP_LED_On(LED3);
-  
-  /* Start the record */
-  if (BSP_AUDIO_IN_Record((uint16_t*)&InternalBuffer[0], INTERNAL_BUFF_SIZE) != AUDIO_OK)
-  {
-    /* Record Error */
-    Error_Handler();
-  }
-  BufferCtl.fptr = 0;
-  
-  AUDIODataReady = 0; 
-
-  /* Wait for the data to be ready with PCM form */
-  while (AUDIODataReady != 2) 
-  {
-    if(BufferCtl.offset == BUFFER_OFFSET_HALF)
-    {
-      /* PDM to PCM data convert */
-      BSP_AUDIO_IN_PDMToPCM((uint16_t*)&InternalBuffer[0], (uint16_t*)&RecBuf[0]);
-
-      /* Copy PCM data in internal buffer */
-      memcpy((uint16_t*)&WrBuffer[ITCounter * (PCM_OUT_SIZE)], RecBuf, PCM_OUT_SIZE*2); // 3rd arg is number of bytes, uint16_t is 2 bytes
-      
-      BufferCtl.offset = BUFFER_OFFSET_NONE;
-      
-      if(ITCounter == (WR_BUFFER_SIZE/(PCM_OUT_SIZE*4))-1)
-      {
-        AUDIODataReady = 1;
-        AUDIOBuffOffset = 0;
-        ITCounter++;
-      }
-      else if(ITCounter == (WR_BUFFER_SIZE/(PCM_OUT_SIZE*2))-1)
-      {
-        AUDIODataReady = 2;
-        AUDIOBuffOffset = WR_BUFFER_SIZE/2;
-        ITCounter = 0;
-      }
-      else
-      {
-        ITCounter++;
-      }     
-      
-    }
-    
-    if(BufferCtl.offset == BUFFER_OFFSET_FULL)
-    {
-      /* PDM to PCM data convert */
-      BSP_AUDIO_IN_PDMToPCM((uint16_t*)&InternalBuffer[INTERNAL_BUFF_SIZE/2], (uint16_t*)&RecBuf[0]);
-      
-      /* Copy PCM data in internal buffer */
-      memcpy((uint16_t*)&WrBuffer[ITCounter * (PCM_OUT_SIZE)], RecBuf, PCM_OUT_SIZE*2);
-      
-      BufferCtl.offset = BUFFER_OFFSET_NONE;
-      
-      if(ITCounter == (WR_BUFFER_SIZE/(PCM_OUT_SIZE*4))-1)
-      {
-        AUDIODataReady = 1;
-        AUDIOBuffOffset = 0;
-        ITCounter++;
-      }
-      else if(ITCounter == (WR_BUFFER_SIZE/(PCM_OUT_SIZE*2))-1)
-      {
-        AUDIODataReady = 2;
-        AUDIOBuffOffset = WR_BUFFER_SIZE/2;
-        ITCounter = 0;
-      }
-      else
-      {
-        ITCounter++;
-      } 
-    }   
-  };
-  
-  /* Stop audio record */
-  if (BSP_AUDIO_IN_Stop() != AUDIO_OK)
-  {
-    /* Record Error */
-    Error_Handler();
-  }
-
-  /* Turn OFF LED3: record stopped */
-  BSP_LED_Off(LED3);
-
+  SX1278_LoRaEntryRx(&SX1278, 19, 1000);
   
   /********** codec 2 **********/
   c2 = codec2_create(CODEC2_MODE_1300);
@@ -189,23 +102,237 @@ void AudioRecord_Test(void)
   unsigned char *bits = (unsigned char*)malloc(nbyte*sizeof(char));
 //  unsigned char encoded[((WR_BUFFER_SIZE/2 + nsam-1)/nsam)*nbyte];
   
-  int i = 0;
-  int copyLen = 0;
-  while(i < WR_BUFFER_SIZE/2) {
-    if(i + nsam > WR_BUFFER_SIZE/2) {
-      copyLen = WR_BUFFER_SIZE/2 - i;
-    } else {
-      copyLen = nsam;
+  while(1) {
+  if(UserPressButton) {
+    BufferCtl.offset = BUFFER_OFFSET_NONE;
+    if(BSP_AUDIO_IN_Init(DEFAULT_AUDIO_IN_FREQ, DEFAULT_AUDIO_IN_BIT_RESOLUTION, DEFAULT_AUDIO_IN_CHANNEL_NBR) != AUDIO_OK)
+    {
+      /* Record Error */
+      Error_Handler();
+    }  
+
+    /* Turn ON LED3: start record */
+    BSP_LED_On(LED3);
+    
+    /* Start the record */
+    if (BSP_AUDIO_IN_Record((uint16_t*)&InternalBuffer[0], INTERNAL_BUFF_SIZE) != AUDIO_OK)
+    {
+      /* Record Error */
+      Error_Handler();
     }
-    memcpy(buf, &WrBuffer[i], copyLen*2);
-    codec2_encode(c2, bits, buf);
-    codec2_decode(c2, buf, bits);
-    memcpy(&WrBuffer[i], buf, copyLen*2);
-    i += nsam;
+    BufferCtl.fptr = 0;
+    
+    AUDIODataReady = 0; 
+
+    /* Wait for the data to be ready with PCM form */
+    while (AUDIODataReady != 2) 
+    {
+      if(BufferCtl.offset == BUFFER_OFFSET_HALF)
+      {
+        /* PDM to PCM data convert */
+        BSP_AUDIO_IN_PDMToPCM((uint16_t*)&InternalBuffer[0], (uint16_t*)&RecBuf[0]);
+
+        /* Copy PCM data in internal buffer */
+        memcpy((uint16_t*)&WrBuffer[ITCounter * (PCM_OUT_SIZE)], RecBuf, PCM_OUT_SIZE*2); // 3rd arg is number of bytes, uint16_t is 2 bytes
+        
+        BufferCtl.offset = BUFFER_OFFSET_NONE;
+        
+        if(ITCounter == (WR_BUFFER_SIZE/(PCM_OUT_SIZE*4))-1)
+        {
+          AUDIODataReady = 1;
+          AUDIOBuffOffset = 0;
+          ITCounter++;
+        }
+        else if(ITCounter == (WR_BUFFER_SIZE/(PCM_OUT_SIZE*2))-1)
+        {
+          AUDIODataReady = 2;
+          AUDIOBuffOffset = WR_BUFFER_SIZE/2;
+          ITCounter = 0;
+        }
+        else
+        {
+          ITCounter++;
+        }     
+        
+      }
+      
+      if(BufferCtl.offset == BUFFER_OFFSET_FULL)
+      {
+        /* PDM to PCM data convert */
+        BSP_AUDIO_IN_PDMToPCM((uint16_t*)&InternalBuffer[INTERNAL_BUFF_SIZE/2], (uint16_t*)&RecBuf[0]);
+        
+        /* Copy PCM data in internal buffer */
+        memcpy((uint16_t*)&WrBuffer[ITCounter * (PCM_OUT_SIZE)], RecBuf, PCM_OUT_SIZE*2);
+        
+        BufferCtl.offset = BUFFER_OFFSET_NONE;
+        
+        if(ITCounter == (WR_BUFFER_SIZE/(PCM_OUT_SIZE*4))-1)
+        {
+          AUDIODataReady = 1;
+          AUDIOBuffOffset = 0;
+          ITCounter++;
+        }
+        else if(ITCounter == (WR_BUFFER_SIZE/(PCM_OUT_SIZE*2))-1)
+        {
+          AUDIODataReady = 2;
+          AUDIOBuffOffset = WR_BUFFER_SIZE/2;
+          ITCounter = 0;
+        }
+        else
+        {
+          ITCounter++;
+        } 
+      }   
+    };
+    
+    /* Stop audio record */
+    if (BSP_AUDIO_IN_Stop() != AUDIO_OK)
+    {
+      /* Record Error */
+      Error_Handler();
+    }
+
+    /* Turn OFF LED3: record stopped */
+    BSP_LED_Off(LED3);
+    
+    // Turn on LED5: start transmit
+    BSP_LED_On(LED5);
+    SX1278_LoRaEntryTx(&SX1278, nbyte, 1000);
+    
+//    int i = 0;
+//    int copyLen = 0;
+//    while(i < WR_BUFFER_SIZE/2) {
+//      if(i + nsam > WR_BUFFER_SIZE/2) {
+//        copyLen = WR_BUFFER_SIZE/2 - i;
+//      } else {
+//        copyLen = nsam;
+//      }
+//      memcpy(buf, &WrBuffer[i], copyLen*2);
+//      codec2_encode(c2, bits, buf);
+//      SX1278_LoRaTxPacket(&SX1278, bits, nbyte, 1000);
+
+//      i += nsam;
+//    }
+
+    int i = 0;
+    int copyLen = 0;
+    while(i < WR_BUFFER_SIZE) {
+      if(i + 200 > WR_BUFFER_SIZE) {
+        copyLen = WR_BUFFER_SIZE - i;
+      } else {
+        copyLen = 200;
+      }
+
+      SX1278_LoRaTxPacket(&SX1278, (uint8_t *) &WrBuffer[i], 200, 1000);
+
+      i += 200;
+    }
+
+    // Turn off LED5: end transmit
+    BSP_LED_Off(LED5);
+    SX1278_LoRaEntryRx(&SX1278, 19, 1000);
+    UserPressButton = 0;
+  } else {
+    // start receive
+    BSP_LED_On(LED4);
+    int i = 0;
+    int copyLen = 0;
+    int ret = 0;
+
+    char msg[20];
+//    while(!UserPressButton && i < WR_BUFFER_SIZE/2) {
+//      ret = SX1278_LoRaRxPacket(&SX1278);
+//      if(ret > 0) {
+//        if(i + nsam > WR_BUFFER_SIZE/2) {
+//          copyLen = WR_BUFFER_SIZE/2 - i;
+//        } else {
+//          copyLen = nsam;
+//        }
+//        SX1278_read(&SX1278, bits, ret);
+//        codec2_decode(c2, buf, bits);
+//        memcpy(&WrBuffer[i], buf, copyLen*2);
+//        int msglen = sprintf(msg, "rec count %d\n", i);
+//        
+//        i += nsam;
+//        
+//        HAL_UART_Transmit(&huart1, (uint8_t *)msg, msglen, 100);
+//      }
+//    }
+    while(!UserPressButton && i < WR_BUFFER_SIZE) {
+      ret = SX1278_LoRaRxPacket(&SX1278);
+      if(ret > 0) {
+        if(i + 200 > WR_BUFFER_SIZE) {
+          copyLen = WR_BUFFER_SIZE - i;
+        } else {
+          copyLen = 200;
+        }
+        SX1278_read(&SX1278,(uint8_t *) &WrBuffer[i], 200);
+
+        int msglen = sprintf(msg, "rec count %d\n", i);
+        
+        i += 200;
+        
+        HAL_UART_Transmit(&huart1, (uint8_t *)msg, msglen, 100);
+      }
+    }
+    // stop receive
+    
+    BSP_LED_Off(LED4);
+    if(UserPressButton) {
+      continue;
+    }
+    
+    
+    // duplicate sample in output, make it stereo
+    i = WR_BUFFER_SIZE/2 - 1;
+    while(i >= 0) {
+      WrBuffer[2*i] = WrBuffer[i];
+      WrBuffer[2*i + 1] = WrBuffer[i];
+      i--;
+    }
+    
+    /* Turn ON LED6: play recorded file */
+    BSP_LED_On(LED6);
+    
+    /* Play in the loop the recorded file */
+
+    /* Set variable to indicate play from record buffer */ 
+    AudioTest = 1;
+    
+    /* Set variable used to stop player before starting */
+    UserPressButton = 0;
+
+    /* Initialize audio IN at REC_FREQ */ 
+    BSP_AUDIO_OUT_Init(OUTPUT_DEVICE_AUTO, 70, DEFAULT_AUDIO_IN_FREQ);
+
+    /* Set the total number of data to be played */
+    AudioTotalSize = AUDIODATA_SIZE * WR_BUFFER_SIZE;  
+    /* Update the remaining number of data to be played */
+    AudioRemSize = 0;  
+    /* Update the WrBuffer audio pointer position */
+    CurrentPos = (uint16_t *)(WrBuffer);
+    
+    /* Play the recorded buffer */
+    BSP_AUDIO_OUT_Play(WrBuffer , AudioTotalSize);
+    
+    while(!UserPressButton)
+    { 
+    }
+    
+    /* Stop Player before close Test */
+    if (BSP_AUDIO_OUT_Stop(CODEC_PDWN_SW) != AUDIO_OK)
+    {
+      /* Audio Stop error */
+      Error_Handler();
+    }
+    BSP_LED_Off(LED6);
   }
+}
+
+  
+
   
 //  int i = 0;
-//  int j = 0;
 //  int copyLen = 0;
 //  while(i < WR_BUFFER_SIZE/2) {
 //    if(i + nsam > WR_BUFFER_SIZE/2) {
@@ -215,75 +342,18 @@ void AudioRecord_Test(void)
 //    }
 //    memcpy(buf, &WrBuffer[i], copyLen*2);
 //    codec2_encode(c2, bits, buf);
-//    memcpy(&encoded[j], bits, nbyte);
-//    j += nbyte;
-
-//    i += nsam;
-//  }
-//  
-//  i = 0;
-//  j = 0;
-//  while(i < WR_BUFFER_SIZE/2) {
-//    if(i + nsam > WR_BUFFER_SIZE/2) {
-//      copyLen = WR_BUFFER_SIZE/2 - i;
-//    } else {
-//      copyLen = nsam;
-//    }
-
-//    memcpy(bits, &encoded[j], nbyte);
-//    j += nbyte;
 //    codec2_decode(c2, buf, bits);
 //    memcpy(&WrBuffer[i], buf, copyLen*2);
 //    i += nsam;
 //  }
+  
   
   free(buf);
   free(bits);
   codec2_destroy(c2);
   /********** codec 2 **********/
 
-  // duplicate sample in output, make it stereo
-  i = WR_BUFFER_SIZE/2 - 1;
-  while(i >= 0) {
-    WrBuffer[2*i] = WrBuffer[i];
-    WrBuffer[2*i + 1] = WrBuffer[i];
-    i--;
-  }
-  
-  /* Turn ON LED6: play recorded file */
-  BSP_LED_On(LED6);
-  
-  /* Play in the loop the recorded file */
 
-  /* Set variable to indicate play from record buffer */ 
-  AudioTest = 1;
-  
-  /* Set variable used to stop player before starting */
-  UserPressButton = 0;
-
-  /* Initialize audio IN at REC_FREQ */ 
-  BSP_AUDIO_OUT_Init(OUTPUT_DEVICE_AUTO, 70, DEFAULT_AUDIO_IN_FREQ);
-
-  /* Set the total number of data to be played */
-  AudioTotalSize = AUDIODATA_SIZE * WR_BUFFER_SIZE;  
-  /* Update the remaining number of data to be played */
-  AudioRemSize = 0;  
-  /* Update the WrBuffer audio pointer position */
-  CurrentPos = (uint16_t *)(WrBuffer);
-  
-  /* Play the recorded buffer */
-  BSP_AUDIO_OUT_Play(WrBuffer , AudioTotalSize);
-  
-  while(!UserPressButton)
-  { 
-  }
-  
-  /* Stop Player before close Test */
-  if (BSP_AUDIO_OUT_Stop(CODEC_PDWN_SW) != AUDIO_OK)
-  {
-    /* Audio Stop error */
-    Error_Handler();
-  }
   
 }
 

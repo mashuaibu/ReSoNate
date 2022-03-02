@@ -46,6 +46,7 @@ __IO uint32_t PressCount = 0;
 // serial communication handle
 SPI_HandleTypeDef hspi1;
 UART_HandleTypeDef huart1;
+
 SX1278_hw_t SX1278_hw;
 SX1278_t SX1278;
 
@@ -101,10 +102,10 @@ int main(void)
   SX1278_init(&SX1278, 868000000, SX1278_POWER_17DBM, SX1278_LORA_SF_7,
   SX1278_LORA_BW_125KHZ, SX1278_LORA_CR_4_5, SX1278_LORA_CRC_EN, 10);
   
-  SX1278_LoRaEntryRx(&SX1278, 19, 1000);
+  
 
-  char buffer[20];
-  int count = 0;
+//  char buffer[20];
+//  int count = 0;
   
   /* Toggle LEDs between each Test */
   while (!UserPressButton) Toggle_Leds();
