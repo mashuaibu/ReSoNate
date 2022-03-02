@@ -178,6 +178,78 @@ void AudioRecord_Test(void)
 
   /* Turn OFF LED3: record stopped */
   BSP_LED_Off(LED3);
+
+  
+  /********** codec 2 **********/
+  c2 = codec2_create(CODEC2_MODE_1300);
+  int nsam = codec2_samples_per_frame(c2);
+  short *buf = (short*)malloc(nsam*sizeof(short));
+  int nbit = codec2_bits_per_frame(c2);
+  int nbyte = (nbit + 7) / 8;
+  unsigned char *bits = (unsigned char*)malloc(nbyte*sizeof(char));
+//  unsigned char encoded[((WR_BUFFER_SIZE/2 + nsam-1)/nsam)*nbyte];
+  
+  int i = 0;
+  int copyLen = 0;
+  while(i < WR_BUFFER_SIZE/2) {
+    if(i + nsam > WR_BUFFER_SIZE/2) {
+      copyLen = WR_BUFFER_SIZE/2 - i;
+    } else {
+      copyLen = nsam;
+    }
+    memcpy(buf, &WrBuffer[i], copyLen*2);
+    codec2_encode(c2, bits, buf);
+    codec2_decode(c2, buf, bits);
+    memcpy(&WrBuffer[i], buf, copyLen*2);
+    i += nsam;
+  }
+  
+//  int i = 0;
+//  int j = 0;
+//  int copyLen = 0;
+//  while(i < WR_BUFFER_SIZE/2) {
+//    if(i + nsam > WR_BUFFER_SIZE/2) {
+//      copyLen = WR_BUFFER_SIZE/2 - i;
+//    } else {
+//      copyLen = nsam;
+//    }
+//    memcpy(buf, &WrBuffer[i], copyLen*2);
+//    codec2_encode(c2, bits, buf);
+//    memcpy(&encoded[j], bits, nbyte);
+//    j += nbyte;
+
+//    i += nsam;
+//  }
+//  
+//  i = 0;
+//  j = 0;
+//  while(i < WR_BUFFER_SIZE/2) {
+//    if(i + nsam > WR_BUFFER_SIZE/2) {
+//      copyLen = WR_BUFFER_SIZE/2 - i;
+//    } else {
+//      copyLen = nsam;
+//    }
+
+//    memcpy(bits, &encoded[j], nbyte);
+//    j += nbyte;
+//    codec2_decode(c2, buf, bits);
+//    memcpy(&WrBuffer[i], buf, copyLen*2);
+//    i += nsam;
+//  }
+  
+  free(buf);
+  free(bits);
+  codec2_destroy(c2);
+  /********** codec 2 **********/
+
+  // duplicate sample in output, make it stereo
+  i = WR_BUFFER_SIZE/2 - 1;
+  while(i >= 0) {
+    WrBuffer[2*i] = WrBuffer[i];
+    WrBuffer[2*i + 1] = WrBuffer[i];
+    i--;
+  }
+  
   /* Turn ON LED6: play recorded file */
   BSP_LED_On(LED6);
   
@@ -198,42 +270,6 @@ void AudioRecord_Test(void)
   AudioRemSize = 0;  
   /* Update the WrBuffer audio pointer position */
   CurrentPos = (uint16_t *)(WrBuffer);
-  
-  /********** codec 2 **********/
-  c2 = codec2_create(CODEC2_MODE_1300);
-  int nsam = codec2_samples_per_frame(c2);
-  short *buf = (short*)malloc(nsam*sizeof(short));
-  int nbit = codec2_bits_per_frame(c2);
-  int nbyte = (nbit + 7) / 8;
-  unsigned char *bits = (unsigned char*)malloc(nbyte*sizeof(char));
-
-  int i = 0;
-  int copyLen = 0;
-  while(i < WR_BUFFER_SIZE/2) {
-    if(i + nsam > WR_BUFFER_SIZE/2) {
-      copyLen = WR_BUFFER_SIZE/2-i;
-    } else {
-      copyLen = nsam;
-    }
-    memcpy(buf, &WrBuffer[i], copyLen*2);
-    codec2_encode(c2, bits, buf);
-    codec2_decode(c2, buf, bits);
-    memcpy(&WrBuffer[i], buf, copyLen*2);
-    i += nsam;
-  }
-  
-  free(buf);
-  free(bits);
-  codec2_destroy(c2);
-  /********** codec 2 **********/
-
-  // duplicate sample in output, make it stereo
-  i = WR_BUFFER_SIZE/2 - 1;
-  while(i >= 0) {
-    WrBuffer[2*i] = WrBuffer[i];
-    WrBuffer[2*i + 1] = WrBuffer[i];
-    i--;
-  }
   
   /* Play the recorded buffer */
   BSP_AUDIO_OUT_Play(WrBuffer , AudioTotalSize);

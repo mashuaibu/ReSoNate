@@ -118,40 +118,40 @@ int main(void)
   while (1)
   {
     
-    //AudioRecord_Test();
+    AudioRecord_Test();
 
-    if(UserPressButton) {
-      BSP_LED_On(LED3);
-      BSP_LED_Off(LED6);
-      
-      int message_length = sprintf(buffer, "Hello %d\n", count);
-      SX1278_LoRaEntryTx(&SX1278, message_length, 1000);
-      
-      SX1278_LoRaTxPacket(&SX1278, (uint8_t *)buffer, message_length, 1000);
-      
-      count += 1;
-      
-      HAL_Delay(1000);
-      SX1278_LoRaEntryRx(&SX1278, 19, 1000);
-      UserPressButton = 0;
-    } else {
-      BSP_LED_Off(LED3);
-      BSP_LED_On(LED6);
-      
-      int ret = SX1278_LoRaRxPacket(&SX1278);
-      if(ret > 0) {
-        SX1278_read(&SX1278, (uint8_t *)buffer, ret);
-        HAL_UART_Transmit(&huart1, (uint8_t *)buffer, ret, 100);
-      }
-      
-    }
+//    if(UserPressButton) {
+//      BSP_LED_On(LED3);
+//      BSP_LED_Off(LED6);
+//      
+//      int message_length = sprintf(buffer, "Hello %d\n", count);
+//      SX1278_LoRaEntryTx(&SX1278, message_length, 1000);
+//      
+//      SX1278_LoRaTxPacket(&SX1278, (uint8_t *)buffer, message_length, 1000);
+//      
+//      count += 1;
+//      
+//      HAL_Delay(1000);
+//      SX1278_LoRaEntryRx(&SX1278, 19, 1000);
+//      UserPressButton = 0;
+//    } else {
+//      BSP_LED_Off(LED3);
+//      BSP_LED_On(LED6);
+//      
+//      int ret = SX1278_LoRaRxPacket(&SX1278);
+//      if(ret > 0) {
+//        SX1278_read(&SX1278, (uint8_t *)buffer, ret);
+//        HAL_UART_Transmit(&huart1, (uint8_t *)buffer, ret, 100);
+//      }
+//      
+//    }
     /* Toggle LEDs between each Test */
     
-//    while (!UserPressButton) Toggle_Leds();
-//    BSP_LED_Off(LED3);
-//    BSP_LED_Off(LED4);
-//    BSP_LED_Off(LED5);
-//    BSP_LED_Off(LED6);
+    while (!UserPressButton) Toggle_Leds();
+    BSP_LED_Off(LED3);
+    BSP_LED_Off(LED4);
+    BSP_LED_Off(LED5);
+    BSP_LED_Off(LED6);
   }
 }
 
