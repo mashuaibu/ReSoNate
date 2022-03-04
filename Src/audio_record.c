@@ -50,6 +50,7 @@ typedef enum
 
 /* Private define ------------------------------------------------------------*/
 #define TX_DEV
+
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 uint8_t  pHeaderBuff[44];
@@ -101,7 +102,8 @@ void AudioRecord_Test(void)
   int nbit = codec2_bits_per_frame(c2);
   int nbyte = (nbit + 7) / 8;
   unsigned char *bits = (unsigned char*)malloc(nbyte*sizeof(char));
-//  unsigned char encoded[((WR_BUFFER_SIZE/2 + nsam-1)/nsam)*nbyte];
+  int encodedSize = ((WR_BUFFER_SIZE/2 + nsam-1)/nsam)*nbyte;
+  unsigned char encoded[encodedSize];
   
 
   while(1) {
@@ -205,28 +207,70 @@ void AudioRecord_Test(void)
     
     // Turn on LED5: start transmit
     BSP_LED_On(LED5);
-    SX1278_LoRaEntryTx(&SX1278, nbyte, 1000);
+    SX1278_LoRaEntryTx(&SX1278, 222, 1000);
     
+
+//    int i = 0;
+//    int copyLen = 0;
+//    while(i < WR_BUFFER_SIZE/2) {
+//      if(i + nsam > WR_BUFFER_SIZE/2) {
+//        copyLen = WR_BUFFER_SIZE/2 - i;
+//      } else {
+//        copyLen = nsam;
+//      }
+//      
+//      memcpy(buf, &WrBuffer[i], copyLen*2);
+//      codec2_encode(c2, bits, buf);
+//      SX1278_LoRaTxPacket(&SX1278, bits, nbyte, 1000);
+
+//      i += nsam;
+//    }
 
     int i = 0;
+    int j = 0;
     int copyLen = 0;
-    while(i < WR_BUFFER_SIZE) {
-      if(i + 200 > WR_BUFFER_SIZE) {
-        copyLen = WR_BUFFER_SIZE - i;
+    while(i < WR_BUFFER_SIZE/2) {
+      if(i + nsam > WR_BUFFER_SIZE/2) {
+        copyLen = WR_BUFFER_SIZE/2 - i;
       } else {
-        copyLen = 200;
+        copyLen = nsam;
+      }
+      
+      memcpy(buf, &WrBuffer[i], copyLen*2);
+      codec2_encode(c2, bits, buf);
+      memcpy(&encoded[j], bits, nbyte);
+
+      i += nsam;
+      j += nbyte;
+    }
+    
+    i = 0;
+    while(i < encodedSize) {
+      if(i + 222 > encodedSize) {
+        copyLen = encodedSize - i;
+      } else {
+        copyLen = 222;
       }
 
-      SX1278_LoRaTxPacket(&SX1278, &((uint8_t *)WrBuffer)[i], copyLen, 1000);
-
-      i += 200;
+      SX1278_LoRaTxPacket(&SX1278, bits, copyLen, 1000);
+      i += 222;
     }
-
+    
+    
     // Turn off LED5: end transmit
     BSP_LED_Off(LED5);
-    SX1278_LoRaEntryRx(&SX1278, 19, 1000);
+//    SX1278_LoRaEntryRx(&SX1278, 19, 1000);
     UserPressButton = 0;
     
+    // decode
+    i = 0;
+    j = 0;
+    while(i < encodedSize) {
+      codec2_decode(c2, buf, &encoded[i]);
+      memcpy(&WrBuffer[j], buf, nsam*2);
+      i += nbyte;
+      j += nsam;
+    }
     
         // duplicate sample in output, make it stereo
     i = WR_BUFFER_SIZE/2 - 1;
@@ -245,7 +289,7 @@ void AudioRecord_Test(void)
     AudioTest = 1;
     
     /* Set variable used to stop player before starting */
-    UserPressButton = 0;
+//    UserPressButton = 0;
 
     /* Initialize audio IN at REC_FREQ */ 
     BSP_AUDIO_OUT_Init(OUTPUT_DEVICE_AUTO, 70, DEFAULT_AUDIO_IN_FREQ);
@@ -263,7 +307,7 @@ void AudioRecord_Test(void)
     while(!UserPressButton)
     { 
     }
-    
+    UserPressButton = 0;
     /* Stop Player before close Test */
     if (BSP_AUDIO_OUT_Stop(CODEC_PDWN_SW) != AUDIO_OK)
     {
@@ -271,7 +315,7 @@ void AudioRecord_Test(void)
       Error_Handler();
     }
     BSP_LED_Off(LED6);
-    UserPressButton = 0;
+    
     
     // Turn on LED4: wait for instruction
     BSP_LED_On(LED4);
@@ -282,34 +326,45 @@ void AudioRecord_Test(void)
     UserPressButton = 0;
     BSP_LED_On(LED4);
     int i = 0;
+    int j = 0;
     int copyLen = 0;
     int ret = 0;
 
     char msg[20];
-
-    while(!UserPressButton && i < WR_BUFFER_SIZE) {
+    
+    while(i < encodedSize) {
       ret = SX1278_LoRaRxPacket(&SX1278);
       if(ret > 0) {
-        if(i + 200 > WR_BUFFER_SIZE) {
-          copyLen = WR_BUFFER_SIZE - i;
+        if(i + ret > encodedSize) {
+          copyLen = encodedSize - i;
         } else {
-          copyLen = 200;
+          copyLen = ret;
         }
-        SX1278_read(&SX1278, &((uint8_t *)WrBuffer)[i], copyLen);
-
+        
+        SX1278_read(&SX1278, &encoded[i], copyLen);
+        
+        
         int msglen = sprintf(msg, "rec count %d\n", i);
         
-        i += 200;
+        i += ret;
         
         HAL_UART_Transmit(&huart1, (uint8_t *)msg, msglen, 100);
       }
     }
+    
+    i = 0;
+    j = 0;
+    while(i < encodedSize) {
+      codec2_decode(c2, buf, &encoded[i]);
+      memcpy(&WrBuffer[j], buf, nsam*2);
+      i += nbyte;
+      j += nsam;
+    }
+    
+        
     // stop receive
     
     BSP_LED_Off(LED4);
-    if(UserPressButton) {
-      continue;
-    }
     
     
     // duplicate sample in output, make it stereo
@@ -347,6 +402,7 @@ void AudioRecord_Test(void)
     while(!UserPressButton)
     { 
     }
+    UserPressButton = 0;
     
     /* Stop Player before close Test */
     if (BSP_AUDIO_OUT_Stop(CODEC_PDWN_SW) != AUDIO_OK)
@@ -355,7 +411,7 @@ void AudioRecord_Test(void)
       Error_Handler();
     }
     BSP_LED_Off(LED6);
-    UserPressButton = 0;
+    
   }
 #endif
 }
