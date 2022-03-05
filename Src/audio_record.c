@@ -49,9 +49,9 @@ typedef enum
 
 
 /* Private define ------------------------------------------------------------*/
-//#define TX_DEV
-#define NO_CODEC2
-#define CODEC2_IN_BETWEEN
+#define TX_DEV
+//#define NO_CODEC2
+//#define CODEC2_IN_BETWEEN
 #define DECODE_BEFORE_TX
 #define CODEC2_AFTER
 
@@ -97,7 +97,7 @@ extern UART_HandleTypeDef huart1;
   */
 void AudioRecord_Test(void)
 {
-  SX1278_LoRaEntryRx(&SX1278, 19, 1000);
+  SX1278_LoRaEntryRx(&SX1278, 222, 1000);
   
   /********** codec 2 **********/
   c2 = codec2_create(CODEC2_MODE_1300);
@@ -246,9 +246,42 @@ void AudioRecord_Test(void)
       i += nsam;
     }
 #elif defined(DECODE_BEFORE_TX)
+    SX1278_LoRaEntryTx(&SX1278, 200, 1000);
+    int i = 0;
+    int j = 0;
+    int copyLen = 0;
+    while(i < WR_BUFFER_SIZE/2) {
+      if(i + nsam > WR_BUFFER_SIZE/2) {
+        copyLen = WR_BUFFER_SIZE/2 - i;
+      } else {
+        copyLen = nsam;
+      }
+      
+      memcpy(buf, &WrBuffer[i], copyLen*2);
+      codec2_encode(c2, bits, buf);
+      codec2_decode(c2, buf, bits);
+      memcpy(&WrBuffer[i], buf, copyLen*2);
 
+      i += nsam;
+      j += nbyte;
+    }
+    
+    i = 0;
+    // transmit
+    while(i < WR_BUFFER_SIZE) {
+      if(i + 200 > WR_BUFFER_SIZE) {
+        copyLen = WR_BUFFER_SIZE - i;
+      } else {
+        copyLen = 200;
+      }
+      
+      SX1278_LoRaTxPacket(&SX1278, & ((uint8_t *)WrBuffer)[i], 200, 1000);
+
+      i += 200;
+    }
+    
 #elif defined(CODEC2_AFTER)
-  SX1278_LoRaEntryTx(&SX1278, 222, 1000);
+    SX1278_LoRaEntryTx(&SX1278, 222, 1000);
     int i = 0;
     int j = 0;
     int copyLen = 0;
@@ -378,9 +411,46 @@ void AudioRecord_Test(void)
       }
     }
 #elif defined(CODEC2_IN_BETWEEN)
-
+    while(i < encodedSize) {
+      ret = SX1278_LoRaRxPacket(&SX1278);
+      if(ret > 0) {
+        if(i + ret > encodedSize) {
+          copyLen = encodedSize - i;
+        } else {
+          copyLen = ret;
+        }
+        
+        SX1278_read(&SX1278, bits, copyLen);
+        codec2_decode(c2, buf, bits);
+        memcpy(&WrBuffer[j], buf, nsam*2);
+        
+        int msglen = sprintf(msg, "rec count %d\n", i);
+        
+        i += ret;
+        j += nsam;
+        HAL_UART_Transmit(&huart1, (uint8_t *)msg, msglen, 100);
+      }
+    }
 #elif defined(DECODE_BEFORE_TX)
-  
+    while(i < WR_BUFFER_SIZE) {
+      ret = SX1278_LoRaRxPacket(&SX1278);
+      if(ret > 0) {
+        if(i + ret > WR_BUFFER_SIZE) {
+          copyLen = WR_BUFFER_SIZE - i;
+        } else {
+          copyLen = ret;
+        }
+        
+        SX1278_read(&SX1278, & ((uint8_t *)WrBuffer)[i], copyLen);
+        
+        
+        int msglen = sprintf(msg, "rec count %d\n", i);
+        
+        i += ret;
+        
+        HAL_UART_Transmit(&huart1, (uint8_t *)msg, msglen, 100);
+      }
+    }
 #elif defined(CODEC2_AFTER)
     while(i < encodedSize) {
       ret = SX1278_LoRaRxPacket(&SX1278);
