@@ -49,7 +49,7 @@ typedef enum
 
 
 /* Private define ------------------------------------------------------------*/
-#define TX_DEV
+//#define TX_DEV
 //#define NO_CODEC2
 #define CODEC2_IN_BETWEEN
 #define DECODE_BEFORE_TX
@@ -97,7 +97,6 @@ extern UART_HandleTypeDef huart1;
   */
 void AudioRecord_Test(void)
 {
-  SX1278_LoRaEntryRx(&SX1278, 222, 1000);
   
   /********** codec 2 **********/
   c2 = codec2_create(CODEC2_MODE_1300);
@@ -411,6 +410,7 @@ void AudioRecord_Test(void)
       }
     }
 #elif defined(CODEC2_IN_BETWEEN)
+    SX1278_LoRaEntryRx(&SX1278, nbyte, 1000);
     int msglen = 0;
     while(i < encodedSize) {
       ret = SX1278_LoRaRxPacket(&SX1278);
