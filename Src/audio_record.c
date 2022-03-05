@@ -51,7 +51,7 @@ typedef enum
 /* Private define ------------------------------------------------------------*/
 #define TX_DEV
 //#define NO_CODEC2
-//#define CODEC2_IN_BETWEEN
+#define CODEC2_IN_BETWEEN
 #define DECODE_BEFORE_TX
 #define CODEC2_AFTER
 
@@ -411,6 +411,7 @@ void AudioRecord_Test(void)
       }
     }
 #elif defined(CODEC2_IN_BETWEEN)
+    int msglen = 0;
     while(i < encodedSize) {
       ret = SX1278_LoRaRxPacket(&SX1278);
       if(ret > 0) {
@@ -421,10 +422,19 @@ void AudioRecord_Test(void)
         }
         
         SX1278_read(&SX1278, bits, copyLen);
+        int k = 0;
+        while (k < copyLen) {
+          msglen = sprintf(msg, "%x ", bits[k]);
+          HAL_UART_Transmit(&huart1, (uint8_t *)msg, msglen, 100);
+          k++;
+        }
+        msglen = sprintf(msg, "\n");
+        HAL_UART_Transmit(&huart1, (uint8_t *)msg, msglen, 100);
+        
         codec2_decode(c2, buf, bits);
         memcpy(&WrBuffer[j], buf, nsam*2);
         
-        int msglen = sprintf(msg, "rec count %d\n", i);
+        msglen = sprintf(msg, "rec count %d\n", i);
         
         i += ret;
         j += nsam;
