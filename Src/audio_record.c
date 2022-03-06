@@ -228,7 +228,7 @@ void AudioRecord_Test(void)
       i += 200;
     }
 #elif defined(CODEC2_IN_BETWEEN)
-    SX1278_LoRaEntryTx(&SX1278, nbyte, 1000);
+//    SX1278_LoRaEntryTx(&SX1278, nbyte, 1000);
     int i = 0;
     int copyLen = 0;
     while(i < WR_BUFFER_SIZE/2) {
@@ -240,7 +240,8 @@ void AudioRecord_Test(void)
       
       memcpy(buf, &WrBuffer[i], copyLen*2);
       codec2_encode(c2, bits, buf);
-      SX1278_LoRaTxPacket(&SX1278, bits, nbyte, 1000);
+      SX1278_transmit(&SX1278, bits, nbyte, 1000);
+//      SX1278_LoRaTxPacket(&SX1278, bits, nbyte, 1000);
 
       i += nsam;
     }
