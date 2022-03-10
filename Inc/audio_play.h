@@ -23,13 +23,14 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-
+#include "codec2_fifo.h"
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
 //void AudioPlay_Test(void);
+uint8_t SpeakerStart(struct FIFO* src_fifo);
 #endif /* __AUDIO_PLAY_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

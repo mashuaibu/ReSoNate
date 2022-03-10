@@ -51,7 +51,7 @@
 
 /* Size of the recorder buffer (Multiple of 4096, RAM_BUFFER_SIZE used in BSP)*/
 //#define WR_BUFFER_SIZE           0x7000
-#define WR_BUFFER_SIZE           0x7000
+#define WR_BUFFER_SIZE           640
 /* Defines for the Audio playing process */
 #define PAUSE_STATUS     ((uint32_t)0x00) /* Audio Player in Pause Status */
 #define RESUME_STATUS    ((uint32_t)0x01) /* Audio Player in Resume Status */

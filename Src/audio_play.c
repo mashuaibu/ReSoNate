@@ -20,6 +20,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "audio_play.h"
 
+#include <string.h>
 /** @addtogroup STM32F4xx_HAL_Examples
   * @{
   */
@@ -72,7 +73,10 @@ uint16_t *CurrentPos;             /* This variable holds the current position of
 
 extern uint16_t WrBuffer[WR_BUFFER_SIZE];
 
+struct FIFO* fifo;
+short buffer[640];
 /* Private function prototypes -----------------------------------------------*/
+static void FillNextBuffer();
 /* Private functions ---------------------------------------------------------*/
 
 /**
@@ -145,6 +149,34 @@ extern uint16_t WrBuffer[WR_BUFFER_SIZE];
 //  }
 //}
 
+// This is called in the DMA interrupt to fill the DMA buffer with the next 160 samples
+static void FillNextBuffer()
+{
+	if (fifo_read(fifo, buffer, 320) == 0)
+	{
+		// There are enough samples for the next buffer
+		// Expand and duplicate the 160 sample mono buffer into a stereo buffer of 320 samples (160L + 160R)
+		// They are interleaved LRLRLRLR......
+		// We work backwards.
+		int i;
+		for (i = 320-1; i >= 0; i--)
+			buffer[2 * i] = buffer[(2 * i) + 1] = buffer[i];
+	}
+	else
+	{
+		// Insufficient samples in the source fifo, play silence
+		memset(buffer, 0, sizeof(buffer));
+	}
+}
+
+uint8_t SpeakerStart(struct FIFO* src_fifo)
+{
+	fifo = src_fifo;
+	FillNextBuffer();
+	// there is some very broken buffer size maths in EVAL_AUDIO_Play
+	return BSP_AUDIO_OUT_Play((uint16_t *)buffer , 640*2); // Only stereo is supported
+}
+
 /*--------------------------------
 Callbacks implementation:
 The callbacks prototypes are defined in the stm32f401_discovery_audio.h file
@@ -158,24 +190,24 @@ Below some examples of callback implementations.
 */
 void BSP_AUDIO_OUT_TransferComplete_CallBack()
 {
-  uint32_t replay = 0;
-  
-  if (AudioRemSize > 0)
-  {
-    /* Replay from the current position */
-    BSP_AUDIO_OUT_ChangeBuffer((uint16_t*)CurrentPos, DMA_MAX(AudioRemSize/AUDIODATA_SIZE));
-    
-    /* Update the current pointer position */
-    CurrentPos += DMA_MAX(AudioRemSize);        
-    
-    /* Update the remaining number of data to be played */
-    AudioRemSize -= AUDIODATA_SIZE * DMA_MAX(AudioRemSize/AUDIODATA_SIZE);  
-  }
-  else
-  {
-    /* Request to replay audio file from beginning */
-    replay = 1;
-  }
+//  uint32_t replay = 0;
+//  
+//  if (AudioRemSize > 0)
+//  {
+//    /* Replay from the current position */
+//    BSP_AUDIO_OUT_ChangeBuffer((uint16_t*)CurrentPos, DMA_MAX(AudioRemSize/AUDIODATA_SIZE));
+//    
+//    /* Update the current pointer position */
+//    CurrentPos += DMA_MAX(AudioRemSize);        
+//    
+//    /* Update the remaining number of data to be played */
+//    AudioRemSize -= AUDIODATA_SIZE * DMA_MAX(AudioRemSize/AUDIODATA_SIZE);  
+//  }
+//  else
+//  {
+//    /* Request to replay audio file from beginning */
+//    replay = 1;
+//  }
 
 //  /* Audio sample used for play */
 //  if((AudioTest == 0) && (replay == 1))
@@ -192,11 +224,13 @@ void BSP_AUDIO_OUT_TransferComplete_CallBack()
 //  }
   
   /* Audio sample saved during record */  // commment this to not repeat play record
-  if((AudioTest == 1) && (replay == 1))
-  {
-    /* Replay from the beginning */
-    BSP_AUDIO_OUT_Play(WrBuffer, AudioTotalSize);
-  }
+//  if((AudioTest == 1) && (replay == 1))
+//  {
+//    /* Replay from the beginning */
+//    BSP_AUDIO_OUT_Play(WrBuffer, AudioTotalSize);
+//  }
+  FillNextBuffer();
+  BSP_AUDIO_OUT_Play((uint16_t *)buffer , 640*2);
 }
 
 /**
