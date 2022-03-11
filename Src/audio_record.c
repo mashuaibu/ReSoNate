@@ -105,7 +105,8 @@ void AudioRecord_Test(void)
   int nbit = codec2_bits_per_frame(c2);
   int nbyte = (nbit + 7) / 8;
   unsigned char *bits = (unsigned char*)malloc(nbyte*sizeof(char));
-  int encodedSize = 1050;
+//  int encodedSize = 1050;
+  int encodedSize = ((WR_BUFFER_SIZE + nsam-1)/nsam)*nbyte;
   unsigned char encoded[encodedSize];
   
 
@@ -143,14 +144,14 @@ void AudioRecord_Test(void)
     AUDIODataReady = 0; 
     
     ITCounter = 0;
-    volatile int encodedCount = 0;
+//    volatile int encodedCount = 0;
     /* Wait for the data to be ready with PCM form */
-//    while (AUDIODataReady != 2) 
-    while (!UserPressButton)
+    while (AUDIODataReady != 2) 
+//    while (!UserPressButton)
     {
-      if(encodedCount >= encodedSize) {
-        break;
-      }
+//      if(encodedCount >= encodedSize) {
+//        break;
+//      }
       if(BufferCtl.offset == BUFFER_OFFSET_HALF)
       {
         /* PDM to PCM data convert */
@@ -165,8 +166,8 @@ void AudioRecord_Test(void)
         {
           AUDIODataReady = 1;
           AUDIOBuffOffset = 0;
-          codec2_encode(c2, &encoded[encodedCount], (short *)&WrBuffer);
-          encodedCount += nbyte;
+//          codec2_encode(c2, &encoded[encodedCount], (short *)&WrBuffer);
+//          encodedCount += nbyte;
           
           ITCounter++;
         }
@@ -174,8 +175,8 @@ void AudioRecord_Test(void)
         {
           AUDIODataReady = 2;
           AUDIOBuffOffset = WR_BUFFER_SIZE/2;
-          codec2_encode(c2, &encoded[encodedCount], (short *)&WrBuffer[nsam]);
-          encodedCount += nbyte;
+//          codec2_encode(c2, &encoded[encodedCount], (short *)&WrBuffer[nsam]);
+//          encodedCount += nbyte;
 //          SX1278_transmit(&SX1278, bits, nbyte, 1000);
           ITCounter = 0;
         }
@@ -200,8 +201,8 @@ void AudioRecord_Test(void)
         {
           AUDIODataReady = 1;
           AUDIOBuffOffset = 0;
-          codec2_encode(c2, &encoded[encodedCount], (short *)&WrBuffer);
-          encodedCount += nbyte;
+//          codec2_encode(c2, &encoded[encodedCount], (short *)&WrBuffer);
+//          encodedCount += nbyte;
 //          SX1278_transmit(&SX1278, bits, nbyte, 1000);
           ITCounter++;
         }
@@ -209,8 +210,8 @@ void AudioRecord_Test(void)
         {
           AUDIODataReady = 2;
           AUDIOBuffOffset = WR_BUFFER_SIZE/2;
-          codec2_encode(c2, &encoded[encodedCount], (short *)(&WrBuffer[nsam]));
-          encodedCount += nbyte;
+//          codec2_encode(c2, &encoded[encodedCount], (short *)(&WrBuffer[nsam]));
+//          encodedCount += nbyte;
 //          SX1278_transmit(&SX1278, bits, nbyte, 1000);
           ITCounter = 0;
         }
@@ -237,10 +238,18 @@ void AudioRecord_Test(void)
     /* Turn OFF LED3: record stopped */
     BSP_LED_Off(LED3);
     
+    int encodedCount = 0;
+    int i = 0;
+    while(encodedCount < encodedSize) {
+      codec2_encode(c2, &encoded[encodedCount], (short *)&WrBuffer[i]);
+      i += nsam;
+      encodedCount += nbyte;
+    }
+    
     // start receive
     BSP_LED_On(LED6);
     
-    rx_fifo = fifo_create(640);
+    rx_fifo = fifo_create(1280);
     
     /* Initialize audio IN at REC_FREQ */ 
     BSP_AUDIO_OUT_Init(OUTPUT_DEVICE_AUTO, 70, DEFAULT_AUDIO_IN_FREQ);

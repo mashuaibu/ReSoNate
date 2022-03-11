@@ -74,7 +74,7 @@ uint16_t *CurrentPos;             /* This variable holds the current position of
 extern uint16_t WrBuffer[WR_BUFFER_SIZE];
 
 struct FIFO* fifo;
-short buffer[640];
+short buffer[1280];
 /* Private function prototypes -----------------------------------------------*/
 static void FillNextBuffer(void);
 /* Private functions ---------------------------------------------------------*/
@@ -152,14 +152,14 @@ static void FillNextBuffer(void);
 // This is called in the DMA interrupt to fill the DMA buffer with the next 160 samples
 static void FillNextBuffer(void)
 {
-	if (fifo_read(fifo, buffer, 320) == 0)
+	if (fifo_read(fifo, buffer, 640) == 0)
 	{
 		// There are enough samples for the next buffer
 		// Expand and duplicate the 160 sample mono buffer into a stereo buffer of 320 samples (160L + 160R)
 		// They are interleaved LRLRLRLR......
 		// We work backwards.
 		int i;
-		for (i = 320-1; i >= 0; i--)
+		for (i = 640-1; i >= 0; i--)
 			buffer[2 * i] = buffer[(2 * i) + 1] = buffer[i];
 	}
 	else
@@ -174,7 +174,7 @@ uint8_t SpeakerStart(struct FIFO* src_fifo)
 	fifo = src_fifo;
 	FillNextBuffer();
 	// there is some very broken buffer size maths in EVAL_AUDIO_Play
-	return BSP_AUDIO_OUT_Play((uint16_t *)buffer , 640*2); // Only stereo is supported
+	return BSP_AUDIO_OUT_Play((uint16_t *)buffer , 1280*2); // Only stereo is supported
 }
 
 /*--------------------------------
