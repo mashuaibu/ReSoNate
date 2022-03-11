@@ -76,7 +76,7 @@ extern uint16_t WrBuffer[WR_BUFFER_SIZE];
 struct FIFO* fifo;
 short buffer[640];
 /* Private function prototypes -----------------------------------------------*/
-static void FillNextBuffer();
+static void FillNextBuffer(void);
 /* Private functions ---------------------------------------------------------*/
 
 /**
@@ -150,7 +150,7 @@ static void FillNextBuffer();
 //}
 
 // This is called in the DMA interrupt to fill the DMA buffer with the next 160 samples
-static void FillNextBuffer()
+static void FillNextBuffer(void)
 {
 	if (fifo_read(fifo, buffer, 320) == 0)
 	{
@@ -230,7 +230,7 @@ void BSP_AUDIO_OUT_TransferComplete_CallBack()
 //    BSP_AUDIO_OUT_Play(WrBuffer, AudioTotalSize);
 //  }
   FillNextBuffer();
-  BSP_AUDIO_OUT_Play((uint16_t *)buffer , 640*2);
+//  BSP_AUDIO_OUT_Play((uint16_t *)buffer , 640*2);
 }
 
 /**
