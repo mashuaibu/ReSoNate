@@ -1084,7 +1084,7 @@ static void PDMDecoder_Init(uint32_t AudioFreq, uint32_t ChnlNbrIn, uint32_t Chn
     PDM_Filter_Init((PDM_Filter_Handler_t *)(&PDM_FilterHandler[index]));
 
     /* PDM lib config phase */
-    PDM_FilterConfig[index].output_samples_number = AudioFreq/1000;
+    PDM_FilterConfig[index].output_samples_number = 20*AudioFreq/1000;
     PDM_FilterConfig[index].mic_gain = 24;
     PDM_FilterConfig[index].decimation_factor = PDM_FILTER_DEC_FACTOR_64;
     PDM_Filter_setConfig((PDM_Filter_Handler_t *)&PDM_FilterHandler[index], &PDM_FilterConfig[index]);
