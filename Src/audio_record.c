@@ -115,6 +115,9 @@ void AudioRecord_Test(void)
   if(UserPressButton) {
     UserPressButton = 0;
     
+    volatile int encodedCount = 0;
+    rx_fifo = fifo_create(1280);
+    
     BufferCtl.offset = BUFFER_OFFSET_NONE;
     if(BSP_AUDIO_IN_Init(DEFAULT_AUDIO_IN_FREQ, DEFAULT_AUDIO_IN_BIT_RESOLUTION, DEFAULT_AUDIO_IN_CHANNEL_NBR) != AUDIO_OK)
     {
@@ -144,7 +147,7 @@ void AudioRecord_Test(void)
     AUDIODataReady = 0; 
     
     ITCounter = 0;
-    volatile int encodedCount = 0;
+    
     /* Wait for the data to be ready with PCM form */
 //    while (AUDIODataReady != 2) 
     while (!UserPressButton)
@@ -229,14 +232,16 @@ void AudioRecord_Test(void)
       Error_Handler();
     }
     
-//    encodedCount = 0;
-//    while(encodedCount < encodedSize) {
-//      SX1278_transmit(&SX1278, &encoded[encodedCount], nbyte, 1000);
-//      encodedCount += nbyte;
-//    }
+
     
     /* Turn OFF LED3: record stopped */
     BSP_LED_Off(LED3);
+    
+    encodedCount = 0;
+    while(encodedCount < encodedSize) {
+      SX1278_transmit(&SX1278, &encoded[encodedCount], nbyte, 1000);
+      encodedCount += nbyte;
+    }
     
 //    int encodedCount = 0;
 //    int i = 0;
@@ -249,7 +254,7 @@ void AudioRecord_Test(void)
     // start receive
     BSP_LED_On(LED6);
     
-    rx_fifo = fifo_create(1280);
+    
     
     /* Initialize audio IN at REC_FREQ */ 
     BSP_AUDIO_OUT_Init(OUTPUT_DEVICE_AUTO, 70, DEFAULT_AUDIO_IN_FREQ);
