@@ -50,8 +50,8 @@ typedef enum
 
 
 /* Private define ------------------------------------------------------------*/
-#define TX_DEV
-
+//#define TX_DEV
+//#define LIVE
 
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
@@ -106,8 +106,6 @@ void AudioRecord_Test(void)
   int nbyte = (nbit + 7) / 8;
   unsigned char *bits = (unsigned char*)malloc(nbyte*sizeof(char));
   int encodedSize = 1050;
-//  int encodedSize = ((WR_BUFFER_SIZE + nsam-1)/nsam)*nbyte;
-//  unsigned char encoded[encodedSize];
   
 
   while(1) {
@@ -115,6 +113,7 @@ void AudioRecord_Test(void)
   if(UserPressButton) {
     UserPressButton = 0;
     
+    unsigned char encoded[encodedSize];
     volatile int encodedCount = 0;
 //    rx_fifo = fifo_create(1280);
     
@@ -169,20 +168,20 @@ void AudioRecord_Test(void)
         {
           AUDIODataReady = 1;
           AUDIOBuffOffset = 0;
-//          codec2_encode(c2, &encoded[encodedCount], (short *)&WrBuffer);
-          codec2_encode(c2, bits, (short *)&WrBuffer);
+          codec2_encode(c2, &encoded[encodedCount], (short *)&WrBuffer);
           encodedCount += nbyte;
-          SX1278_transmit(&SX1278, bits, nbyte, 1000);
+//          codec2_encode(c2, bits, (short *)&WrBuffer);
+//          SX1278_transmit(&SX1278, bits, nbyte, 1000);
           ITCounter++;
         }
         else if(ITCounter == (WR_BUFFER_SIZE/(PCM_OUT_SIZE))-1)
         {
           AUDIODataReady = 2;
           AUDIOBuffOffset = WR_BUFFER_SIZE/2;
-//          codec2_encode(c2, &encoded[encodedCount], (short *)&WrBuffer[nsam]);
-          codec2_encode(c2, bits, (short *)&WrBuffer);
+          codec2_encode(c2, &encoded[encodedCount], (short *)&WrBuffer[nsam]);
           encodedCount += nbyte;
-          SX1278_transmit(&SX1278, bits, nbyte, 1000);
+//          codec2_encode(c2, bits, (short *)&WrBuffer);
+//          SX1278_transmit(&SX1278, bits, nbyte, 1000);
           ITCounter = 0;
         }
         else
@@ -206,20 +205,20 @@ void AudioRecord_Test(void)
         {
           AUDIODataReady = 1;
           AUDIOBuffOffset = 0;
-//          codec2_encode(c2, &encoded[encodedCount], (short *)&WrBuffer);
-          codec2_encode(c2, bits, (short *)&WrBuffer);
+          codec2_encode(c2, &encoded[encodedCount], (short *)&WrBuffer);
           encodedCount += nbyte;
-          SX1278_transmit(&SX1278, bits, nbyte, 1000);
+//          codec2_encode(c2, bits, (short *)&WrBuffer);
+//          SX1278_transmit(&SX1278, bits, nbyte, 1000);
           ITCounter++;
         }
         else if(ITCounter == (WR_BUFFER_SIZE/(PCM_OUT_SIZE))-1)
         {
           AUDIODataReady = 2;
           AUDIOBuffOffset = WR_BUFFER_SIZE/2;
-//          codec2_encode(c2, &encoded[encodedCount], (short *)(&WrBuffer[nsam]));
-          codec2_encode(c2, bits, (short *)&WrBuffer);
+          codec2_encode(c2, &encoded[encodedCount], (short *)(&WrBuffer[nsam]));
           encodedCount += nbyte;
-          SX1278_transmit(&SX1278, bits, nbyte, 1000);
+//          codec2_encode(c2, bits, (short *)&WrBuffer);
+//          SX1278_transmit(&SX1278, bits, nbyte, 1000);
           ITCounter = 0;
         }
         else
@@ -241,21 +240,15 @@ void AudioRecord_Test(void)
     /* Turn OFF LED3: record stopped */
     BSP_LED_Off(LED3);
     
-//    encodedCount = 0;
-//    while(encodedCount < encodedSize) {
-//      SX1278_transmit(&SX1278, &encoded[encodedCount], nbyte, 1000);
-//      encodedCount += nbyte;
-//    }
+    // start transmission
+    encodedCount = 0;
+    while(encodedCount < encodedSize) {
+      SX1278_transmit(&SX1278, &encoded[encodedCount], nbyte, 1000);
+      encodedCount += nbyte;
+    }
     
-//    int encodedCount = 0;
-//    int i = 0;
-//    while(encodedCount < encodedSize) {
-//      codec2_encode(c2, &encoded[encodedCount], (short *)&WrBuffer[i]);
-//      i += nsam;
-//      encodedCount += nbyte;
-//    }
     
-    // start receive
+    // start play
 //    BSP_LED_On(LED6);
 //    
 //    
@@ -283,82 +276,11 @@ void AudioRecord_Test(void)
 //    
 //    fifo_destroy(rx_fifo);
 //    
-//    // stop receive
+//    // stop play
 //    BSP_LED_Off(LED6);
     
-//    // Turn on LED5: start transmit
-//    BSP_LED_On(LED5);
-//    
-//    
-////    SX1278_LoRaEntryTx(&SX1278, nbyte, 1000);
-//    int i = 0;
-//    int copyLen = 0;
-//    while(i < WR_BUFFER_SIZE/2) {
-//      if(i + nsam > WR_BUFFER_SIZE/2) {
-//        copyLen = WR_BUFFER_SIZE/2 - i;
-//      } else {
-//        copyLen = nsam;
-//      }
-//      
-//      memcpy(buf, &WrBuffer[i], copyLen*2);
-//      codec2_encode(c2, bits, buf);
-//      SX1278_transmit(&SX1278, bits, nbyte, 1000);
-////      SX1278_LoRaTxPacket(&SX1278, bits, nbyte, 1000);
 
-//      i += nsam;
-//    }
 
-//    
-//    // Turn off LED5: end transmit
-//    BSP_LED_Off(LED5);
-////    SX1278_LoRaEntryRx(&SX1278, 19, 1000);
-//    UserPressButton = 0;
-//    
-
-//    
-//        // duplicate sample in output, make it stereo
-//    i = WR_BUFFER_SIZE/2 - 1;
-//    while(i >= 0) {
-//      WrBuffer[2*i] = WrBuffer[i];
-//      WrBuffer[2*i + 1] = WrBuffer[i];
-//      i--;
-//    }
-//    
-//    /* Turn ON LED6: play recorded file */
-//    BSP_LED_On(LED6);
-//    
-//    /* Play in the loop the recorded file */
-
-//    /* Set variable to indicate play from record buffer */ 
-//    AudioTest = 1;
-//    
-//    /* Set variable used to stop player before starting */
-////    UserPressButton = 0;
-
-//    /* Initialize audio IN at REC_FREQ */ 
-//    BSP_AUDIO_OUT_Init(OUTPUT_DEVICE_AUTO, 70, DEFAULT_AUDIO_IN_FREQ);
-
-//    /* Set the total number of data to be played */
-//    AudioTotalSize = AUDIODATA_SIZE * WR_BUFFER_SIZE;  
-//    /* Update the remaining number of data to be played */
-//    AudioRemSize = 0;  
-//    /* Update the WrBuffer audio pointer position */
-//    CurrentPos = (uint16_t *)(WrBuffer);
-//    
-//    /* Play the recorded buffer */
-//    BSP_AUDIO_OUT_Play(WrBuffer , AudioTotalSize);
-//    
-//    while(!UserPressButton)
-//    { 
-//    }
-//    UserPressButton = 0;
-//    /* Stop Player before close Test */
-//    if (BSP_AUDIO_OUT_Stop(CODEC_PDWN_SW) != AUDIO_OK)
-//    {
-//      /* Audio Stop error */
-//      Error_Handler();
-//    }
-//    BSP_LED_Off(LED6);
     
     UserPressButton = 0;
     // Turn on LED4: wait for instruction
@@ -406,7 +328,6 @@ void AudioRecord_Test(void)
       ret = SX1278_LoRaRxPacket(&SX1278);
       if(ret > 0) {
 
-        
 //        SX1278_read(&SX1278, &encoded[encodedCount], nbyte);
         SX1278_read(&SX1278, bits, nbyte);
         encodedCount += ret;
@@ -435,43 +356,7 @@ void AudioRecord_Test(void)
     // stop receive
     BSP_LED_Off(LED6);
     
-    
-    // duplicate sample in output, make it stereo
-//    i = WR_BUFFER_SIZE/2 - 1;
-//    while(i >= 0) {
-//      WrBuffer[2*i] = WrBuffer[i];
-//      WrBuffer[2*i + 1] = WrBuffer[i];
-//      i--;
-//    }
-    
-//    /* Turn ON LED6: play recorded file */
-//    BSP_LED_On(LED6);
-//    
-//    /* Play in the loop the recorded file */
-
-//    /* Set variable to indicate play from record buffer */ 
-//    AudioTest = 1;
-//    
-//    /* Set variable used to stop player before starting */
-//    UserPressButton = 0;
-
-
-
-//    /* Set the total number of data to be played */
-//    AudioTotalSize = AUDIODATA_SIZE * WR_BUFFER_SIZE;  
-//    /* Update the remaining number of data to be played */
-//    AudioRemSize = 0;  
-//    /* Update the WrBuffer audio pointer position */
-//    CurrentPos = (uint16_t *)(WrBuffer);
-//    
-//    /* Play the recorded buffer */
-//    BSP_AUDIO_OUT_Play(WrBuffer , AudioTotalSize);
-//    
-//    while(!UserPressButton)
-//    { 
-//    }
-//    UserPressButton = 0;
-//    
+      
     /* Stop Player before close Test */
     if (BSP_AUDIO_OUT_Stop(CODEC_PDWN_SW) != AUDIO_OK)
     {
