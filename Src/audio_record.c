@@ -50,8 +50,9 @@ typedef enum
 
 
 /* Private define ------------------------------------------------------------*/
-#define TX_DEV
-#define LIVE
+//#define TX_DEV
+//#define LIVE
+//#define DEBUG_PRINT
 
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
@@ -101,10 +102,10 @@ void AudioRecord_Test(void)
   /********** codec 2 **********/
   c2 = codec2_create(CODEC2_MODE_1300);
   int nsam = codec2_samples_per_frame(c2);
-  short *buf = (short*)malloc(nsam*sizeof(short));
+//  short *buf = (short*)malloc(nsam*sizeof(short));
   int nbit = codec2_bits_per_frame(c2);
   int nbyte = (nbit + 7) / 8;
-  unsigned char *bits = (unsigned char*)malloc(nbyte*sizeof(char));
+//  unsigned char *bits = (unsigned char*)malloc(nbyte*sizeof(char));
   int encodedSize = 1050;
   
 
@@ -305,8 +306,8 @@ void AudioRecord_Test(void)
     // start transmission
     encodedCount = 0;
     while(encodedCount < encodedSize) {
-      SX1278_transmit(&SX1278, &encoded[encodedCount], nbyte, 1000);
-      encodedCount += nbyte;
+      SX1278_transmit(&SX1278, &encoded[encodedCount], 2*nbyte, 1000);
+      encodedCount += 2*nbyte;
     }
   #endif
     
@@ -377,7 +378,7 @@ void AudioRecord_Test(void)
     
     SpeakerStart(rx_fifo);
     
-    SX1278_LoRaEntryRx(&SX1278, nbyte, 1000);
+    SX1278_LoRaEntryRx(&SX1278, 2*nbyte, 1000);
     
     
     #ifdef LIVE
@@ -397,8 +398,10 @@ void AudioRecord_Test(void)
       }
     }
     
-
     #else
+//    unsigned char encoded[2*nbyte];
+    unsigned char encoded[encodedSize];
+    short buf[640];
     volatile int encodedCount = 0;
     while(!UserPressButton) {
       
@@ -409,26 +412,29 @@ void AudioRecord_Test(void)
       ret = SX1278_LoRaRxPacket(&SX1278);
       if(ret > 0) {
 
-//        SX1278_read(&SX1278, &encoded[encodedCount], nbyte);
-        SX1278_read(&SX1278, bits, nbyte);
+//        SX1278_read(&SX1278, &encoded[encodedCount], 2*nbyte);
+//        SX1278_read(&SX1278, bits, nbyte);
+        SX1278_read(&SX1278, encoded, 2*nbyte);
         encodedCount += ret;
-        codec2_decode(c2, buf, bits);
-        fifo_write(rx_fifo, buf, 320);
-//        i += ret;
+        codec2_decode(c2, buf, encoded);
+        codec2_decode(c2, &buf[320], &encoded[nbyte]);
+        while(fifo_write(rx_fifo, buf, 640));
 //        
-//        msglen = sprintf(msg, "rec count %d\n", i);
-
-//        HAL_UART_Transmit(&huart1, (uint8_t *)msg, msglen, 100);
+        i += ret;
+        msglen = sprintf(msg, "rec count %d\n", i);
+        HAL_UART_Transmit(&huart1, (uint8_t *)msg, msglen, 100);
       }
     }
     
     // first store, then decode
 //    encodedCount = 0;
 //    while(encodedCount < encodedSize) {
-//      if(fifo_free(rx_fifo) >= 320) {
+//      if(fifo_free(rx_fifo) >= 640) {
 //        codec2_decode(c2, buf, &encoded[encodedCount]);
 //        encodedCount += nbyte;
-//        fifo_write(rx_fifo, buf, 320);
+//        codec2_decode(c2, &buf[320], &encoded[encodedCount]);
+//        encodedCount += nbyte;
+//        fifo_write(rx_fifo, buf, 640);
 //      }
 //    }
     #endif
@@ -454,8 +460,8 @@ void AudioRecord_Test(void)
 
 
   
-  free(buf);
-  free(bits);
+//  free(buf);
+//  free(bits);
   codec2_destroy(c2);
   /********** codec 2 **********/
 
