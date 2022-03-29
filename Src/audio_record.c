@@ -50,7 +50,7 @@ typedef enum
 
 
 /* Private define ------------------------------------------------------------*/
-#define TX_DEV
+//#define TX_DEV
 #define LIVE
 //#define DEBUG_PRINT
 
@@ -147,14 +147,14 @@ void AudioRecord_Test(void)
     /* Wait for the data to be ready with PCM form */
   #ifdef LIVE
 //    unsigned char *bits = (unsigned char*)malloc(nbyte*sizeof(char));
-    int encodedSize = 1050;
+//    int encodedSize = 1050;
     volatile int encodedCount = 0;
     unsigned char encoded[2*nbyte];
     while (!UserPressButton)
     {
-      if(encodedCount >= encodedSize) {
-        break;
-      }
+//      if(encodedCount >= encodedSize) {
+//        break;
+//      }
       
       if(BufferCtl.offset == BUFFER_OFFSET_HALF)
       {
@@ -172,7 +172,7 @@ void AudioRecord_Test(void)
           AUDIOBuffOffset = 0;
 //          codec2_encode(c2, bits, (short *)&WrBuffer);
           codec2_encode(c2, encoded, (short *)&WrBuffer);
-          encodedCount += nbyte;
+//          encodedCount += nbyte;
 //          SX1278_transmit(&SX1278, bits, nbyte, 1000);
           ITCounter++;
         }
@@ -181,7 +181,7 @@ void AudioRecord_Test(void)
           AUDIODataReady = 2;
           AUDIOBuffOffset = WR_BUFFER_SIZE/2;
           codec2_encode(c2, &encoded[nbyte], (short *)&WrBuffer[nsam]);
-          encodedCount += nbyte;
+//          encodedCount += nbyte;
           SX1278_transmit(&SX1278, encoded, 2*nbyte, 1000);
           ITCounter = 0;
         }
@@ -207,7 +207,7 @@ void AudioRecord_Test(void)
           AUDIODataReady = 1;
           AUDIOBuffOffset = 0;
           codec2_encode(c2, encoded, (short *)&WrBuffer);
-          encodedCount += nbyte;
+//          encodedCount += nbyte;
 //          SX1278_transmit(&SX1278, bits, nbyte, 1000);
           ITCounter++;
         }
@@ -216,7 +216,7 @@ void AudioRecord_Test(void)
           AUDIODataReady = 2;
           AUDIOBuffOffset = WR_BUFFER_SIZE/2;
           codec2_encode(c2, &encoded[nbyte], (short *)&WrBuffer[nsam]);
-          encodedCount += nbyte;
+//          encodedCount += nbyte;
           SX1278_transmit(&SX1278, encoded, 2*nbyte, 1000);
           ITCounter = 0;
         }
@@ -399,19 +399,19 @@ void AudioRecord_Test(void)
     
     
     #ifdef LIVE
-    int encodedSize = 1050;
+//    int encodedSize = 1050;
     volatile int encodedCount = 0;
     while(!UserPressButton) {
       
-      if(encodedCount >= encodedSize) {
-        break;
-      }
+//      if(encodedCount >= encodedSize) {
+//        break;
+//      }
       
       ret = SX1278_LoRaRxPacket(&SX1278);
       if(ret > 0) {
 
         SX1278_read(&SX1278, encoded, 2*nbyte);
-        encodedCount += 2*nbyte;
+//        encodedCount += 2*nbyte;
         codec2_decode(c2, buf, encoded);
         codec2_decode(c2, &buf[320], &encoded[nbyte]);
         while(fifo_write(rx_fifo, buf, 640));
