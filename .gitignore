@@ -56,3 +56,7 @@
 
 
 # End of https://www.toptal.com/developers/gitignore/api/keil
+
+# Build output
+Objects/
+Listings/
