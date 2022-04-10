@@ -50,7 +50,7 @@ typedef enum
 
 
 /* Private define ------------------------------------------------------------*/
-#define TX_DEV
+//#define TX_DEV
 #define LIVE
 //#define DEBUG_PRINT
 
