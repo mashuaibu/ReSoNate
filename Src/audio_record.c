@@ -86,8 +86,8 @@ extern UART_HandleTypeDef huart1;
 struct FIFO* rx_fifo;
 
 // 
-uint8_t isAudioInInit = 0;
-uint8_t isAudioOutInit = 0;
+//uint8_t isAudioInInit = 0;
+//uint8_t isAudioOutInit = 0;
 
 /* Private function prototypes -----------------------------------------------*/
 
@@ -119,14 +119,14 @@ void AudioRecord_Test(void)
 //    UserPressButton = 0;
     
     BufferCtl.offset = BUFFER_OFFSET_NONE;
-    if(!isAudioInInit) {
+//    if(!isAudioInInit) {
       if(BSP_AUDIO_IN_Init(DEFAULT_AUDIO_IN_FREQ, DEFAULT_AUDIO_IN_BIT_RESOLUTION, DEFAULT_AUDIO_IN_CHANNEL_NBR) != AUDIO_OK)
       {
         /* Record Error */
         Error_Handler();
       }
-      isAudioInInit = 1;
-    }
+//      isAudioInInit = 1;
+//    }
     
     
     // Turn off LED4
@@ -265,10 +265,10 @@ void AudioRecord_Test(void)
     BSP_LED_On(LED6);
     
     /* Initialize audio IN at REC_FREQ */ 
-    if(!isAudioOutInit) {
+//    if(!isAudioOutInit) {
       BSP_AUDIO_OUT_Init(OUTPUT_DEVICE_AUTO, 70, DEFAULT_AUDIO_IN_FREQ);
-      isAudioOutInit = 1;
-    }
+//      isAudioOutInit = 1;
+//    }
     SpeakerStart(rx_fifo);
     
     SX1278_LoRaEntryRx(&SX1278, 2*nbyte, 1000);
