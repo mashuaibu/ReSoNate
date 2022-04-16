@@ -226,7 +226,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
   if (KEY_BUTTON_PIN == GPIO_Pin)
   {
-    while (BSP_PB_GetState(BUTTON_KEY) != RESET);
+//    while (BSP_PB_GetState(BUTTON_KEY) != RESET);
     UserPressButton = 1;
   }
 

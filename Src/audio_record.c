@@ -50,13 +50,12 @@ typedef enum
 
 
 /* Private define ------------------------------------------------------------*/
-//#define TX_DEV
 #define LIVE
 //#define DEBUG_PRINT
 
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-uint8_t  pHeaderBuff[44];
+//uint8_t  pHeaderBuff[44];
 uint16_t WrBuffer[WR_BUFFER_SIZE];
 
 static uint16_t RecBuf[PCM_OUT_SIZE];
@@ -85,6 +84,11 @@ extern SX1278_t SX1278;
 extern UART_HandleTypeDef huart1;
 
 struct FIFO* rx_fifo;
+
+// 
+uint8_t isAudioInInit = 0;
+uint8_t isAudioOutInit = 0;
+
 /* Private function prototypes -----------------------------------------------*/
 
 /* Private functions ---------------------------------------------------------*/
@@ -110,21 +114,20 @@ void AudioRecord_Test(void)
   
 
   while(1) {
-#ifdef TX_DEV
-  if(UserPressButton) {
-    UserPressButton = 0;
+  /* Transmiter */
+  if(BSP_PB_GetState(BUTTON_KEY) != RESET) {
+//    UserPressButton = 0;
     
     BufferCtl.offset = BUFFER_OFFSET_NONE;
-    if(BSP_AUDIO_IN_Init(DEFAULT_AUDIO_IN_FREQ, DEFAULT_AUDIO_IN_BIT_RESOLUTION, DEFAULT_AUDIO_IN_CHANNEL_NBR) != AUDIO_OK)
-    {
-      /* Record Error */
-      Error_Handler();
-    }  
-
-    while(!UserPressButton) {
-    
+    if(!isAudioInInit) {
+      if(BSP_AUDIO_IN_Init(DEFAULT_AUDIO_IN_FREQ, DEFAULT_AUDIO_IN_BIT_RESOLUTION, DEFAULT_AUDIO_IN_CHANNEL_NBR) != AUDIO_OK)
+      {
+        /* Record Error */
+        Error_Handler();
+      }
+      isAudioInInit = 1;
     }
-    UserPressButton = 0;
+    
     
     // Turn off LED4
     BSP_LED_Off(LED4);
@@ -145,16 +148,11 @@ void AudioRecord_Test(void)
     ITCounter = 0;
     
     /* Wait for the data to be ready with PCM form */
-  #ifdef LIVE
-//    unsigned char *bits = (unsigned char*)malloc(nbyte*sizeof(char));
-//    int encodedSize = 1050;
     volatile int encodedCount = 0;
     unsigned char encoded[2*nbyte];
-    while (!UserPressButton)
+    while (BSP_PB_GetState(BUTTON_KEY) != RESET)
     {
-//      if(encodedCount >= encodedSize) {
-//        break;
-//      }
+//      UserPressButton = 0;
       
       if(BufferCtl.offset == BUFFER_OFFSET_HALF)
       {
@@ -226,83 +224,6 @@ void AudioRecord_Test(void)
         } 
       }   
     };
-  #else
-    int encodedSize = 1050;
-    unsigned char encoded[encodedSize];
-    volatile int encodedCount = 0;
-    
-    while (!UserPressButton)
-    {
-      if(encodedCount >= encodedSize) {
-        break;
-      }
-      if(BufferCtl.offset == BUFFER_OFFSET_HALF)
-      {
-        /* PDM to PCM data convert */
-        BSP_AUDIO_IN_PDMToPCM((uint16_t*)&InternalBuffer[0], (uint16_t*)&RecBuf[0]);
-
-        /* Copy PCM data in internal buffer */
-        memcpy((uint16_t*)&WrBuffer[ITCounter * (PCM_OUT_SIZE)], RecBuf, PCM_OUT_SIZE*2); // 3rd arg is number of bytes, uint16_t is 2 bytes
-        
-        BufferCtl.offset = BUFFER_OFFSET_NONE;
-        
-        if(ITCounter == (WR_BUFFER_SIZE/(PCM_OUT_SIZE*2))-1)
-        {
-          AUDIODataReady = 1;
-          AUDIOBuffOffset = 0;
-          codec2_encode(c2, &encoded[encodedCount], (short *)&WrBuffer);
-          encodedCount += nbyte;
-          ITCounter++;
-        }
-        else if(ITCounter == (WR_BUFFER_SIZE/(PCM_OUT_SIZE))-1)
-        {
-          AUDIODataReady = 2;
-          AUDIOBuffOffset = WR_BUFFER_SIZE/2;
-          codec2_encode(c2, &encoded[encodedCount], (short *)&WrBuffer[nsam]);
-          encodedCount += nbyte;
-          ITCounter = 0;
-        }
-        else
-        {
-          ITCounter++;
-        }     
-        
-      }
-      
-      if(BufferCtl.offset == BUFFER_OFFSET_FULL)
-      {
-        /* PDM to PCM data convert */
-        BSP_AUDIO_IN_PDMToPCM((uint16_t*)&InternalBuffer[INTERNAL_BUFF_SIZE/2], (uint16_t*)&RecBuf[0]);
-        
-        /* Copy PCM data in internal buffer */
-        memcpy((uint16_t*)&WrBuffer[ITCounter * (PCM_OUT_SIZE)], RecBuf, PCM_OUT_SIZE*2);
-        
-        BufferCtl.offset = BUFFER_OFFSET_NONE;
-        
-        if(ITCounter == (WR_BUFFER_SIZE/(PCM_OUT_SIZE*2))-1)
-        {
-          AUDIODataReady = 1;
-          AUDIOBuffOffset = 0;
-          codec2_encode(c2, &encoded[encodedCount], (short *)&WrBuffer);
-          encodedCount += nbyte;
-          ITCounter++;
-        }
-        else if(ITCounter == (WR_BUFFER_SIZE/(PCM_OUT_SIZE))-1)
-        {
-          AUDIODataReady = 2;
-          AUDIOBuffOffset = WR_BUFFER_SIZE/2;
-          codec2_encode(c2, &encoded[encodedCount], (short *)(&WrBuffer[nsam]));
-          encodedCount += nbyte;
-          ITCounter = 0;
-        }
-        else
-        {
-          ITCounter++;
-        } 
-      }   
-    }
-  #endif
-
     
     /* Stop audio record */
     if (BSP_AUDIO_IN_Stop() != AUDIO_OK)
@@ -311,63 +232,21 @@ void AudioRecord_Test(void)
       Error_Handler();
     }
     
-
-    
+    // just make sure
+    UserPressButton = 0;
     /* Turn OFF LED3: record stopped */
     BSP_LED_Off(LED3);
     
-  #ifndef LIVE
-    // start transmission
-    encodedCount = 0;
-    while(encodedCount < encodedSize) {
-      SX1278_transmit(&SX1278, &encoded[encodedCount], 2*nbyte, 1000);
-      encodedCount += 2*nbyte;
-    }
-  #endif
-    
-    // start play
-//    BSP_LED_On(LED6);
-//    
-//    rx_fifo = fifo_create(1280);
-//    
-//    /* Initialize audio IN at REC_FREQ */ 
-//    BSP_AUDIO_OUT_Init(OUTPUT_DEVICE_AUTO, 70, DEFAULT_AUDIO_IN_FREQ);
-//    
-//    SpeakerStart(rx_fifo);
-//    
-//    encodedCount = 0;
-//    while(encodedCount < encodedSize) {
-//      if(fifo_free(rx_fifo) >= 320) {
-//        codec2_decode(c2, buf, &encoded[encodedCount]);
-//        encodedCount += nbyte;
-//        fifo_write(rx_fifo, buf, 320);
-//      }
-//    }
-//    
-//    /* Stop Player before close Test */
-//    if (BSP_AUDIO_OUT_Stop(CODEC_PDWN_SW) != AUDIO_OK)
-//    {
-//      /* Audio Stop error */
-//      Error_Handler();
-//    }
-//    
-//    fifo_destroy(rx_fifo);
-//    
-//    // stop play
-//    BSP_LED_Off(LED6);
-    
-
-
     
     UserPressButton = 0;
     // Turn on LED4: wait for instruction
     BSP_LED_On(LED4);
+    
   }
-#else
-  if(UserPressButton) {
+  /* Receiver */
+  else {  
     
-    UserPressButton = 0;
-    
+//    UserPressButton = 0;
     int i = 0;
 
     int ret = 0;
@@ -380,28 +259,23 @@ void AudioRecord_Test(void)
 //    unsigned char encoded[encodedSize];
     rx_fifo = fifo_create(1280);
 
-    while(!UserPressButton) {
-      
-    }
-    UserPressButton = 0;
-    
     BSP_LED_Off(LED4);
     
     // start receive
     BSP_LED_On(LED6);
     
     /* Initialize audio IN at REC_FREQ */ 
-    BSP_AUDIO_OUT_Init(OUTPUT_DEVICE_AUTO, 70, DEFAULT_AUDIO_IN_FREQ);
-    
+    if(!isAudioOutInit) {
+      BSP_AUDIO_OUT_Init(OUTPUT_DEVICE_AUTO, 70, DEFAULT_AUDIO_IN_FREQ);
+      isAudioOutInit = 1;
+    }
     SpeakerStart(rx_fifo);
     
     SX1278_LoRaEntryRx(&SX1278, 2*nbyte, 1000);
     
-    
-    #ifdef LIVE
 //    int encodedSize = 1050;
     volatile int encodedCount = 0;
-    while(!UserPressButton) {
+    while(BSP_PB_GetState(BUTTON_KEY) == RESET) {
       
 //      if(encodedCount >= encodedSize) {
 //        break;
@@ -422,50 +296,10 @@ void AudioRecord_Test(void)
       }
     }
     
-    #else
-//    unsigned char encoded[2*nbyte];
-    unsigned char encoded[encodedSize];
-    short buf[640];
-    volatile int encodedCount = 0;
-    while(!UserPressButton) {
-      
-      if(encodedCount >= encodedSize) {
-        break;
-      }
-      
-      ret = SX1278_LoRaRxPacket(&SX1278);
-      if(ret > 0) {
-
-//        SX1278_read(&SX1278, &encoded[encodedCount], 2*nbyte);
-//        SX1278_read(&SX1278, bits, nbyte);
-        SX1278_read(&SX1278, encoded, 2*nbyte);
-        encodedCount += ret;
-        codec2_decode(c2, buf, encoded);
-        codec2_decode(c2, &buf[320], &encoded[nbyte]);
-        while(fifo_write(rx_fifo, buf, 640));
-//        
-        i += ret;
-        msglen = sprintf(msg, "rec count %d\n", i);
-        HAL_UART_Transmit(&huart1, (uint8_t *)msg, msglen, 100);
-      }
-    }
-    
-    // first store, then decode
-//    encodedCount = 0;
-//    while(encodedCount < encodedSize) {
-//      if(fifo_free(rx_fifo) >= 640) {
-//        codec2_decode(c2, buf, &encoded[encodedCount]);
-//        encodedCount += nbyte;
-//        codec2_decode(c2, &buf[320], &encoded[encodedCount]);
-//        encodedCount += nbyte;
-//        fifo_write(rx_fifo, buf, 640);
-//      }
-//    }
-    #endif
     
     fifo_destroy(rx_fifo);
     
-    UserPressButton = 0;
+//    UserPressButton = 0;
     // stop receive
     BSP_LED_Off(LED6);
     
@@ -479,7 +313,7 @@ void AudioRecord_Test(void)
 //    BSP_LED_Off(LED6);
     BSP_LED_On(LED4);
   }
-#endif
+
 }
 
 
